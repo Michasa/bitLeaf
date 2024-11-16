@@ -1,18 +1,15 @@
-import getMnemonic from "@/utils/getMnemoic"
+import AppView from "@/components/views/homepage"
 
 export default async function Home() {
-  const data = await getMnemonic()
-  const response = await data.json()
-
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <div>
-          <h1>ByteMe:{response.message}</h1>
-          <p>Your mnemonic is: {response.phrase}</p>
+          <h1>bitLeaf</h1>
+          <p>Your friends will pay you back...right?</p>
         </div>
+        <AppView />
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
     </div>
   )
 }
