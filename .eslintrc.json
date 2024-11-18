@@ -5,5 +5,16 @@
     "plugin:tailwindcss/recommended",
     "next/core-web-vitals",
     "next/typescript"
-  ]
+  ],
+  "rules": {
+    "tailwindcss/classnames-order": "off",
+    "react/no-unescaped-entities": "off",
+    "tailwindcss/migration-from-tailwind-2": "off",
+    "tailwindcss/no-custom-classname": [
+      1,
+      {
+        "whitelist": []
+      }
+    ]
+  }
 }
