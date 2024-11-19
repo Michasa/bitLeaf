@@ -5,8 +5,7 @@ import { Card } from "../ui/card";
 import { useToast } from "@/hooks/use-toast";
 import ContainerWallets from "./containerWallets";
 import ContainerEmpty from "./containerEmpty";
-
-const MAX_WALLETS_ALLOWED = 5;
+import { MAX_WALLETS_ALLOWED } from "@/lib/constants";
 
 const WalletGenerator = () => {
   const [wallets, setWallets] = useState<[] | NewWallet[]>([]);
@@ -15,36 +14,37 @@ const WalletGenerator = () => {
   const { toast } = useToast();
 
   const onCreateNewWallet = async () => {
-    if (wallets.length < MAX_WALLETS_ALLOWED) {
-      //TODO set a  loading property?
+    try {
       const newWallet = await createXWallet();
 
       if (newWallet) {
         setWallets([...wallets, newWallet]);
-        return { success: true };
+
+        toast({
+          title: `New Wallet Created: ${newWallet.address.slice(0, 15)}...`,
+          description: "Select it for more options",
+        });
+
+        return newWallet;
       }
-    } else {
-      //TODO TOAST about too many wallets
-      toast({
-        title: "Maximum Wallets Created!",
-        description: "Too many wallets created, please delete one.",
-      });
+    } catch (error) {
+      console.error("YEAH NO...", error);
     }
   };
 
   const onSelectWallet = (address: string) => {
-    //TODO select by wallet address
     const selectedWallet = wallets.find((wallet) => wallet.address === address);
+
     if (!selectedWallet) {
-      //TODO error message about missing wallet
-      return;
+      return toast({
+        title: `Wallet not found!`,
+      });
     }
 
     setSelectedWallet(selectedWallet);
   };
 
   const onDeleteWallet = (address: string) => {
-    //TODO delete by wallet address instead, check all function using still work
     //TODO add warning diaglog
     if (address === selectedWallet?.address) {
       setSelectedWallet(null);
@@ -63,17 +63,20 @@ const WalletGenerator = () => {
     }
 
     if (selectedWallet.xpriv === "hidden") {
-      const response = await revealXPriv(hiddenXPriv);
+      try {
+        const response = await revealXPriv(hiddenXPriv);
 
-      if (response) {
-        const xpriv = (selectedWallet.xpriv = response);
-        const updatedWallet = { ...selectedWallet, xpriv };
+        if (response) {
+          const xpriv = (selectedWallet.xpriv = response);
+          const updatedWallet = { ...selectedWallet, xpriv };
 
-        setSelectedWallet(updatedWallet);
+          setSelectedWallet(updatedWallet);
+        }
+      } catch (error) {
+        console.error("YEAH NO...", error);
       }
     } else {
-      const xpriv = (selectedWallet.xpriv = "hidden");
-      const updatedWallet = { ...selectedWallet, xpriv };
+      const updatedWallet = { ...selectedWallet, xpriv: "hidden" };
       setSelectedWallet(updatedWallet);
     }
   };

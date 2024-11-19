@@ -45,53 +45,56 @@ const MnemonicCard = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const { setUpSuccess, failureReason } = await generateMasterKey();
-      //TODO add toast
-
-      if (!setUpSuccess) {
-        throw new Error(failureReason);
+      try {
+        await generateMasterKey();
+      } catch (error) {
+        //TODO switch to error view with context
+        console.error("YEAH NO...", error);
       }
     };
     getData();
-  }, []);
+  }, [toast]);
 
   const onRevealRequest = async () => {
     if (!mnemonicPhrase) {
-      setRevealLoading(true);
-      const response = await revealMnemonic();
-      if (response) {
+      try {
+        setRevealLoading(true);
+        const response = await revealMnemonic();
+        if (response) {
+          setMnemonicPhrase(response);
+        }
+      } catch (error) {
+        //TODO switch to error view with context
+        console.error("YEAH NO...", error);
+      } finally {
         setRevealLoading(false);
-        setMnemonicPhrase(response);
       }
     } else {
       setMnemonicPhrase(null);
     }
   };
 
-  const handleCopy = async () => {
-    //FIXME - why doesn't the copy and paste work on windows?
-    await navigator.clipboard
-      ?.writeText(mnemonicPhrase as string)
-      .then((fulfilled) =>
-        toast({
-          title: "Master Key Mnemonic Copied!",
-          description: "Keep it somewhere safe",
-        }),
-      )
-      .catch((error) =>
-        toast({
+  const handleCopy = async (
+    copyItem: string,
+    successMessage: { title: string; description?: string },
+  ) => {
+    try {
+      await navigator.clipboard?.writeText(copyItem);
+      return toast(successMessage);
+    } catch (error) {
+      if (error)
+        return toast({
           title: "Could not copy",
-          description: error,
-        }),
-      );
+        });
+    }
   };
 
   return (
     <>
       <div className="flex w-full flex-col items-center">
         <Card className="flex w-full flex-col items-center justify-center border-amber-300 bg-amber-100 p-4 text-center md:w-10/12 lg:w-7/12">
-          <Collapsible className="w-full">
-            <CollapsibleTrigger className="flex w-full items-center justify-between text-start">
+          <Collapsible className="w-full" defaultOpen>
+            <CollapsibleTrigger className="rotate-icon flex w-full items-center justify-between text-start">
               <div className="flex flex-col">
                 <CardTitle className="my-2 flex gap-x-2 max-lg:text-center">
                   Your Master Key Mnemonic:
@@ -110,7 +113,7 @@ const MnemonicCard = () => {
                 </CardDescription>{" "}
               </div>
               <Icon
-                icon="lsicon:toggle-outline"
+                icon="bitcoin-icons:caret-down-filled"
                 className="m-4 aspect-square text-5xl text-amber-400 hover:text-amber-600"
               />
             </CollapsibleTrigger>
@@ -140,7 +143,12 @@ const MnemonicCard = () => {
                     <Button
                       variant="outline"
                       disabled={revealLoading}
-                      onClick={handleCopy}
+                      onClick={() =>
+                        handleCopy(mnemonicPhrase, {
+                          title: "Mnemonic Copied!",
+                          description: "Keep this somewhere safe!",
+                        })
+                      }
                     >
                       Copy
                       <Icon icon="mingcute:copy-line" />

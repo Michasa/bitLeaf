@@ -10,12 +10,13 @@ import { cn } from "@/lib/utils";
 import WalletViewEmpty from "./walletViewEmpty";
 import WalletDesktop from "./walletDesktop";
 import WalletMobile from "./walletMobile";
+import { MAX_WALLETS_ALLOWED } from "@/lib/constants";
 
 export type ContainerWallets = {
   wallets: NewWallet[];
   selectedWallet: NewWallet | null;
   onRevealXPriv: (xprivSealed: string) => void;
-  onCreateNewWallet: () => void;
+  onCreateNewWallet: () => NewWallet | void;
   onDeleteWallet: (address: NewWallet["address"]) => void;
   onSelectWallet: (address: NewWallet["address"]) => void;
 };
@@ -30,6 +31,8 @@ const ContainerWallets = ({
 }: ContainerWallets) => {
   const ref = useRef<HTMLUListElement>(null);
   const isMobile = useMediaQuery({ maxWidth: 767 });
+
+  const TOO_MANY_WALLETS = wallets.length === MAX_WALLETS_ALLOWED;
 
   return (
     <div className="grid size-full grid-cols-1 gap-4 md:gap-y-8 lg:grid-flow-col lg:grid-cols-5">
@@ -50,23 +53,27 @@ const ContainerWallets = ({
         )}
         <Button
           className="my-4 self-center justify-self-center disabled:bg-gray-100 disabled:text-black"
-          disabled={wallets.length === 5}
-          onClick={() => {
-            onCreateNewWallet();
-            // FIXME: Scroll to end. Also create variable for wallet comparison
-            // ref.current?.scrollWidth;
+          disabled={TOO_MANY_WALLETS}
+          onClick={async () => {
+            await onCreateNewWallet();
+            if (ref.current?.lastElementChild) {
+              ref.current.lastElementChild.scrollIntoView({
+                behavior: "smooth",
+              });
+            }
           }}
         >
           Create a New Wallet
         </Button>
-        {wallets.length === 5 && (
+        {TOO_MANY_WALLETS && (
           <div className="flex items-center gap-x-2 self-center">
             <Icon
               icon="si:warning-duotone"
               className="text-xl text-amber-500"
             />
             <span className="text-base">
-              Max wallets created! Delete one to create a new one
+              Max wallets created! Delete an existing wallet in-order to create
+              a new one
             </span>
           </div>
         )}

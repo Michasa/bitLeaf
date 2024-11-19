@@ -21,7 +21,7 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
             <li key={index} className="w-72 shrink-0">
               <Card
                 className={cn(
-                  "flex size-full flex-col items-center gap-y-4 p-4 text-start hover:shadow-md active:animate-jump active:animate-once active:animate-ease-linear",
+                  "flex size-full animate-jump-in flex-col items-center gap-y-4 p-4 text-start animate-once animate-ease-linear hover:shadow-md",
                   isSelected
                     ? "border-amber-300 bg-amber-100 hover:shadow-amber-600/50"
                     : "border border-brand-olive-100/50 bg-brand-olive-100/80 hover:shadow-brand-green-600/50",
@@ -38,7 +38,7 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
                   </div>
                 </CardTitle>
                 <CardContent className="flex size-full min-h-20 flex-col p-0">
-                  <div className="font-orbitron truncate font-bold text-gray-700">
+                  <div className="truncate font-orbitron font-bold text-gray-700">
                     {address}
                   </div>
                   <div>Payments:</div>

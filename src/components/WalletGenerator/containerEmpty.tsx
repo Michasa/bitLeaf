@@ -3,11 +3,12 @@
 import React from "react";
 import { Icon } from "@iconify-icon/react";
 import { Button } from "../ui/button";
+import { NewWallet } from "@/lib/types";
 
 const ContainerEmpty = ({
   onCreateNewWallet,
 }: {
-  onCreateNewWallet: () => void;
+  onCreateNewWallet: () => NewWallet | void;
 }) => {
   return (
     <div className="flex w-fit flex-col place-items-center rounded-lg p-4">

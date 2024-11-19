@@ -1,9 +1,16 @@
 import dotenv from "dotenv";
 dotenv.config();
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
 import { Orbitron } from "next/font/google";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+
+const Toaster = dynamic(
+  () => import("../../src/components/ui/toaster").then((mod) => mod.Toaster),
+  {
+    ssr: false,
+  },
+);
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -17,8 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn(orbitron.variable, "h-full bg-white")}>
-      <body>{children}</body>
-      <Toaster />
+      <body>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

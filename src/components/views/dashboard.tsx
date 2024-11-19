@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import MnemonicCard from "../MnemonicCard";
 import WalletGenerator from "../WalletGenerator/index";
 import Title from "../Title";
+import { Toaster } from "../ui/toaster";
 
 const StartDashboard = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -23,6 +24,7 @@ const StartDashboard = () => {
         <MnemonicCard />
         <WalletGenerator />
       </div>
+      <Toaster />
     </>
   );
 };

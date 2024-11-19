@@ -28,6 +28,13 @@ body {
     @apply break-all;
   }
 
+  .rotate-icon {
+    &[data-state="closed"] iconify-icon {
+      transform: rotate(180deg);
+      transition: transform 0.3s ease;
+    }
+  }
+
   .debug {
     @apply border-2 border-pink-500;
   }
