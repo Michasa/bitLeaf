@@ -41,7 +41,6 @@ export async function generateMasterKey(): Promise<GenerateMasterKey> {
   } catch (error) {
     return { setUpSuccess: false, failureReason: `Error: ${error}` };
   }
-
 }
 
 export async function revealMnemonic(): Promise<SessionData['mnemonic']> {
@@ -83,6 +82,8 @@ export async function createXWallet(): Promise<NewWallet | undefined> {
     }
 
     return {
+      // nickname:'' //https://www.npmjs.com/package/unique-names-generator#adjectives
+      // timeCreated:''
       address: address,
       xpriv: 'hidden',
       xprivSealed

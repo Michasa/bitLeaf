@@ -1,15 +1,11 @@
-import AppView from "@/components/views/homepage"
+import StartDashboard from "@/components/views/dashboard";
 
 export default async function Home() {
   return (
-    <div className="">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <div>
-          <h1>bitLeaf</h1>
-          <p>Your friends will pay you back...right?</p>
-        </div>
-        <AppView />
+    <>
+      <main className="row-start-2 flex flex-col items-center gap-8 p-4 sm:items-start md:p-10">
+        <StartDashboard />
       </main>
-    </div>
-  )
+    </>
+  );
 }

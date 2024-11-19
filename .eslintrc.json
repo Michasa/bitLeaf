@@ -6,6 +6,7 @@
     "next/core-web-vitals",
     "next/typescript"
   ],
+  "ignorePatterns": ["src/components/ui/*", "src/hooks/use-toast.ts"],
   "rules": {
     "tailwindcss/classnames-order": "off",
     "react/no-unescaped-entities": "off",
