@@ -2,11 +2,11 @@ import React, { forwardRef } from "react";
 import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import { Icon } from "@iconify-icon/react";
 import { Button } from "../ui/button";
-import { ContainerWallets } from "./containerWallets";
 import { cn } from "@/lib/utils";
+import { WalletSelector } from "./WalletSelector";
 
 type WalletDesktop = Pick<
-  ContainerWallets,
+  WalletSelector,
   "onSelectWallet" | "selectedWallet" | "wallets"
 >;
 

@@ -6,13 +6,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ContainerWallets } from "./containerWallets";
+import { WalletSelector } from "./WalletSelector";
 
 const WalletMobile = ({
   wallets,
   onSelectWallet,
   selectedWallet,
-}: Pick<ContainerWallets, "wallets" | "onSelectWallet" | "selectedWallet">) => {
+}: Pick<WalletSelector, "wallets" | "onSelectWallet" | "selectedWallet">) => {
   return (
     <Select
       value={selectedWallet?.address ? selectedWallet?.address : undefined}

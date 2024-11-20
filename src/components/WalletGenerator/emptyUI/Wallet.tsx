@@ -2,13 +2,13 @@
 
 import React from "react";
 import { Icon } from "@iconify-icon/react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { NewWallet } from "@/lib/types";
 
-const ContainerEmpty = ({
+const WalletEmpty = ({
   onCreateNewWallet,
 }: {
-  onCreateNewWallet: () => NewWallet | void;
+  onCreateNewWallet: () => Promise<NewWallet | void>;
 }) => {
   return (
     <div className="flex w-fit flex-col place-items-center rounded-lg p-4">
@@ -20,11 +20,11 @@ const ContainerEmpty = ({
         You don't have any wallets yet.
         <br /> Create your first one!
       </p>
-      <Button className="mt-8" onClick={onCreateNewWallet}>
+      <Button className="mt-8" onClick={async () => onCreateNewWallet()}>
         Create a New Wallet
       </Button>
     </div>
   );
 };
 
-export default ContainerEmpty;
+export default WalletEmpty;
