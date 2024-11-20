@@ -29,7 +29,12 @@ const WalletGenerator = () => {
         return newWallet;
       }
     } catch (error) {
-      console.error("YEAH NO...", error);
+      if (error instanceof Error) {
+        toast({
+          title: `Could not create new wallet`,
+          description: error.message as string,
+        });
+      }
     }
   };
 
@@ -75,7 +80,12 @@ const WalletGenerator = () => {
           setSelectedWallet(updatedWallet);
         }
       } catch (error) {
-        console.error("YEAH NO...", error);
+        if (error instanceof Error) {
+          toast({
+            title: `Could reveal wallet private key`,
+            description: error.message as string,
+          });
+        }
       }
     } else {
       const updatedWallet = { ...selectedWallet!, xpriv: "hidden" };
@@ -84,7 +94,11 @@ const WalletGenerator = () => {
   };
 
   if (wallets.length === 0) {
-    return <WalletEmpty onCreateNewWallet={onCreateNewWallet} />;
+    return (
+      <Card className="flex size-full h-fit flex-col items-center justify-center border-0 bg-brand-olive-200/20 p-4">
+        <WalletEmpty onCreateNewWallet={onCreateNewWallet} />
+      </Card>
+    );
   }
 
   return (

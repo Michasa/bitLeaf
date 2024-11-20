@@ -6,7 +6,7 @@ import HDKey from 'hdkey'
 import { getIronSession, IronSession, sealData, unsealData } from "iron-session"
 import { cookies } from "next/headers"
 import * as bitcoin from 'bitcoinjs-lib';
-import { CANNOT_CREATE_PUB_ADD, CANNOT_DECRYPT, CREATION_FAIL_MSG, NO_MNEMONIC, NO_SECRET_PASSWORD, NO_SEED_FOUND, NO_XWALLET } from "@/lib/errorMessages"
+import { CANNOT_CREATE_PUB_ADD, CANNOT_DECRYPT, CREATION_FAIL_MSG, NO_MNEMONIC, NO_SECRET_PASSWORD, NO_SEED_FOUND, NO_XWALLET, COULDNT_CREATE_COOKIES, NO_SECRET_PASSWORD2 } from "@/lib/errorMessages"
 
 const D_PATH_TEMPLATE = "m/44'/1'/0'/"
 
@@ -32,6 +32,16 @@ export async function generateMasterKey(): Promise<void> {
   session.seed = seed
   session.pathIndex = 0
   await session.save()
+
+  const cookieStore = cookies();
+  const cookieName = cookieStore.get(SessionOptions.cookieName);
+
+  if (!cookieName) {
+    if (!session.mnemonic) {
+      throw new Error(COULDNT_CREATE_COOKIES)
+    }
+  }
+
 }
 
 export async function revealMnemonic(): Promise<SessionData['mnemonic']> {
@@ -59,6 +69,9 @@ export async function createXWallet(): Promise<NewWallet | void> {
   session.pathIndex = session.pathIndex + 1
   await session.save()
 
+  if (process.env.SECRET_XPRIV_PASSWORD === undefined) {
+    throw new Error(NO_SECRET_PASSWORD2);
+  }
   const xprivSealed = await sealData(xWallet.privateExtendedKey, { password: process.env.SECRET_XPRIV_PASSWORD as string })
 
   const xpubBuffer = new Uint8Array(xWallet.publicKey as Buffer)

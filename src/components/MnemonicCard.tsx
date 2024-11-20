@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Icon } from "@iconify-icon/react";
 import { useToast } from "@/hooks/use-toast";
+import { useErrorContext } from "./contexts/ErrorHandler";
 
 const Content = ({
   mnemonicPhrase,
@@ -40,6 +41,7 @@ const Content = ({
 
 const MnemonicCard = () => {
   const { toast } = useToast();
+  const { setError } = useErrorContext();
   const [mnemonicPhrase, setMnemonicPhrase] = useState<null | string>(null);
   const [revealLoading, setRevealLoading] = useState(false);
 
@@ -48,12 +50,13 @@ const MnemonicCard = () => {
       try {
         await generateMasterKey();
       } catch (error) {
-        //TODO switch to error view with context
-        console.error("YEAH NO...", error);
+        if (error instanceof Error) {
+          setError(error.message as string);
+        }
       }
     };
     getData();
-  }, [toast]);
+  }, [toast, setError]);
 
   const onRevealRequest = async () => {
     if (!mnemonicPhrase) {
@@ -64,8 +67,12 @@ const MnemonicCard = () => {
           setMnemonicPhrase(response);
         }
       } catch (error) {
-        //TODO switch to error view with context
-        console.error("YEAH NO...", error);
+        if (error instanceof Error) {
+          return toast({
+            title: "Could not reveal mnemonic",
+            description: error.message as string,
+          });
+        }
       } finally {
         setRevealLoading(false);
       }
