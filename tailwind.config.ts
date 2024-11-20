@@ -15,23 +15,8 @@ export default {
 			},
 			colors: {
 				brand: {
-					dark: {
-						'100': '#82827D',
-						'200': '#6D6D69',
-						'300': '#585855',
-						'400': '#444441',
-						'500': '#2F2F2D',
-						'600': '#1A1A19',
-						DEFAULT: '#1A1A19'
-					},
-					green: {
-						'100': '#92CA71',
-						'200': '#7BBF53',
-						'300': '#67AA3F',
-						'400': '#558D34',
-						'500': '#436F29',
-						'600': '#31511E'
-					},
+					light: '#F6FCDF',
+					dark: '#1A1A19',
 					olive: {
 						'100': '#BDD186',
 						'200': '#ADC568',
@@ -41,7 +26,6 @@ export default {
 						'600': '#414E1E',
 						DEFAULT: '#859F3D'
 					},
-					light: '#F6FCDF'
 				},
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
