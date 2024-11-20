@@ -81,9 +81,10 @@ export async function createXWallet(): Promise<NewWallet | void> {
   if (!address) {
     throw new Error(CANNOT_CREATE_PUB_ADD);
   }
+  const timeStamp = new Date();
 
   return {
-    created: Date.now(),
+    created: timeStamp,
     address: address,
     xpriv: 'hidden',
     xprivSealed

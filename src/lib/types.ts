@@ -5,7 +5,7 @@ export interface SessionData {
   pathIndex: number
 }
 export interface NewWallet {
-  created: number
+  created: Date
   address: string //public address to recieve funds
   xpriv: "hidden" | string //will be sent hidden unless user requests to see it
   xprivSealed: string //sealed version of xpriv decrypted on server

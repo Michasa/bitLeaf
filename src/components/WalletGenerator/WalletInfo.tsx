@@ -11,6 +11,7 @@ import {
 } from "../ui/card";
 import SelectedWalletEmpty from "./emptyUI/SelectedWallet";
 import { NewWallet } from "@/lib/types";
+import tinydate from "tinydate";
 
 export type WalletInfo = {
   selectedWallet: NewWallet | null;
@@ -30,6 +31,9 @@ const WalletInfo = ({
   if (selectedWallet === null) {
     return <SelectedWalletEmpty />;
   }
+
+  const TimestampTemplate = tinydate("{DD}/{MM}/{YY} at {HH}:{mm}:{ss}");
+  console.log(selectedWallet.created);
   return (
     <div className="address flex size-full flex-col items-center gap-y-2 rounded-md">
       <Card className="flex size-full flex-col gap-y-2 border-brand-olive-500/50 bg-white p-4">
@@ -41,7 +45,10 @@ const WalletInfo = ({
         </CardTitle>
         <CardDescription className="flex items-center gap-x-2">
           <Icon icon="majesticons:clock" className="text-brand-olive-500" />
-          <span>Date Created</span>
+          <p>
+            <span className="font-bold">Created:</span>{" "}
+            {TimestampTemplate(selectedWallet.created)}
+          </p>
         </CardDescription>
         <CardContent className="flex flex-col gap-2 p-0">
           <div className="flex items-baseline justify-between">
@@ -63,7 +70,7 @@ const WalletInfo = ({
                 {!XPRIV_HIDDEN && (
                   <Button
                     variant="outline"
-                    // FIXME needs to copy thingg
+                    // FIXME needs to get copy function from context
                     // onClick={() => onRevealXPriv(index, wallet.xprivSealed)}
                   >
                     <Icon
