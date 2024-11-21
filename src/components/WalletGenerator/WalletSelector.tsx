@@ -5,20 +5,23 @@ import { Button } from "../ui/button";
 import { useMediaQuery } from "react-responsive";
 import { Icon } from "@iconify-icon/react";
 import { MAX_WALLETS_ALLOWED } from "@/lib/constants";
-import { NewWallet } from "@/lib/types";
+import { StateHandler } from "../context/StateHandler";
 
-export type WalletSelector = {
-  wallets: NewWallet[];
-  selectedWallet: NewWallet | null;
-  onCreateNewWallet: () => Promise<NewWallet | void>;
-  onSelectWallet: (choice: NewWallet["address"] | null) => void;
-};
+export type WalletSelector = Pick<
+  StateHandler,
+  | "wallets"
+  | "selectedWallet"
+  | "onCreateNewWallet"
+  | "onSelectWallet"
+  | "loadingNewWallet"
+>;
 
 const WalletSelector = ({
   wallets,
   selectedWallet,
   onSelectWallet,
   onCreateNewWallet,
+  loadingNewWallet,
 }: WalletSelector) => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const ref = useRef<HTMLUListElement>(null);
@@ -44,17 +47,29 @@ const WalletSelector = ({
       )}
       <Button
         className="my-4 self-center justify-self-center disabled:bg-gray-100 disabled:text-black"
-        disabled={TOO_MANY_WALLETS}
+        disabled={TOO_MANY_WALLETS || loadingNewWallet}
         onClick={async () => {
-          await onCreateNewWallet();
-          if (ref.current?.lastElementChild) {
-            ref.current.lastElementChild.scrollIntoView({
-              behavior: "smooth",
-            });
+          const wallet = await onCreateNewWallet();
+          if (
+            wallet &&
+            ref.current !== null &&
+            ref.current?.scrollWidth > ref.current?.clientWidth
+          ) {
+            setTimeout(() => {
+              (ref.current as HTMLElement).scrollLeft = ref.current
+                ?.scrollWidth as number;
+            }, 50);
           }
         }}
       >
-        Create a New Wallet
+        {loadingNewWallet ? (
+          <>
+            <Icon className="animate-spin" icon="ri:loader-fill" />
+            Loading
+          </>
+        ) : (
+          "Create a New Wallet"
+        )}
       </Button>
       {TOO_MANY_WALLETS && (
         <div className="flex items-center gap-x-2 self-center">

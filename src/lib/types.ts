@@ -6,7 +6,18 @@ export interface SessionData {
 }
 export interface NewWallet {
   created: Date
-  address: string //public address to recieve funds
-  xpriv: "hidden" | string //will be sent hidden unless user requests to see it
-  xprivSealed: string //sealed version of xpriv decrypted on server
+  address: string
+  xpriv: "hidden" | string
+  xprivSealed: string
+}
+
+
+export interface UseMnemonic {
+  revealLoading: boolean;
+  mnemonicPhrase: string | null;
+  onRevealMasterKey: () => void;
+  handleCopy: (
+    copyItem: string,
+    toastMessage: { title: string; description?: string }
+  ) => void
 }

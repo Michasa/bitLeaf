@@ -3,22 +3,28 @@ import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import { Icon } from "@iconify-icon/react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { WalletSelector } from "./WalletSelector";
+import { StateHandler } from "../context/StateHandler";
+
+type WalletDesktop = Pick<
+  StateHandler,
+  "onSelectWallet" | "wallets" | "selectedWallet"
+>;
 
 const ADDRESS_PREFIX = "tb1q";
 const StyledAddress = ({ address }: { address: string }) => {
   return address.startsWith(ADDRESS_PREFIX) ? (
-    <p>
+    <>
       <span className="text-slate-600">{ADDRESS_PREFIX}</span>
-      <span className="text-brand-dark">
+      <span className="text-shadow text-white">
         {address.replace(ADDRESS_PREFIX, "")}
       </span>
-    </p>
+    </>
   ) : (
-    <p>{address}</p>
+    <p className="text-white">{address}</p>
   );
 };
-const WalletDesktop = forwardRef<HTMLUListElement, WalletSelector>(
+
+const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
   ({ onSelectWallet, selectedWallet, wallets }, ref) => {
     return (
       <ul ref={ref} className="flex flex-row gap-x-4 overflow-auto md:py-8">
@@ -46,7 +52,7 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletSelector>(
                   </div>
                 </CardTitle>
                 <CardContent className="flex size-full min-h-20 flex-col p-0">
-                  <div className="truncate font-orbitron font-bold text-brand-dark">
+                  <div className="truncate font-orbitron font-bold text-white">
                     {<StyledAddress address={address} />}
                   </div>
                   <div>Payments:</div>

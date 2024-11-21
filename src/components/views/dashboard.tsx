@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import MnemonicCard from "../MnemonicCard";
 import WalletGenerator from "../WalletGenerator/index";
 import Title from "../Title";
-import { ErrorHandlerProvider } from "../contexts/ErrorHandler";
+import { ErrorHandlerProvider } from "../context/ErrorHandler";
+import { StateHandlerProvider } from "../context/StateHandler";
 
 const StartDashboard = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -20,10 +21,12 @@ const StartDashboard = () => {
     <>
       <Title />
       <ErrorHandlerProvider>
-        <div className="flex w-full flex-col items-center gap-y-4">
-          <MnemonicCard />
-          <WalletGenerator />
-        </div>
+        <StateHandlerProvider>
+          <div className="flex w-full flex-col items-center gap-y-4">
+            <MnemonicCard />
+            <WalletGenerator />
+          </div>
+        </StateHandlerProvider>
       </ErrorHandlerProvider>
     </>
   );

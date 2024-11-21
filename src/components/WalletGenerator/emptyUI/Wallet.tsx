@@ -3,13 +3,14 @@
 import React from "react";
 import { Icon } from "@iconify-icon/react";
 import { Button } from "../../ui/button";
-import { NewWallet } from "@/lib/types";
+import { UseWallets } from "@/lib/types";
 
-const WalletEmpty = ({
-  onCreateNewWallet,
-}: {
-  onCreateNewWallet: () => Promise<NewWallet | void>;
-}) => {
+export type WalletEmpty = Pick<
+  UseWallets,
+  "onCreateNewWallet" | "loadingNewWallet"
+>;
+
+const WalletEmpty = ({ onCreateNewWallet, loadingNewWallet }: WalletEmpty) => {
   return (
     <div className="flex w-fit flex-col place-items-center rounded-lg p-4">
       <Icon
@@ -21,7 +22,14 @@ const WalletEmpty = ({
         <br /> Create your first one!
       </p>
       <Button className="mt-8" onClick={async () => onCreateNewWallet()}>
-        Create a New Wallet
+        {loadingNewWallet ? (
+          <>
+            <Icon className="animate-spin" icon="ri:loader-fill" />
+            Loading
+          </>
+        ) : (
+          "Create a New Wallet"
+        )}{" "}
       </Button>
     </div>
   );

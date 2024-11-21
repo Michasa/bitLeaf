@@ -10,21 +10,26 @@ import {
   CardTitle,
 } from "../ui/card";
 import SelectedWalletEmpty from "./emptyUI/SelectedWallet";
-import { NewWallet } from "@/lib/types";
+import { UseWallets } from "@/lib/types";
 import tinydate from "tinydate";
 
-export type WalletInfo = {
-  selectedWallet: NewWallet | null;
-  onRevealXPriv: (xprivSealed: string) => void;
-  onDeleteWallet: (address: NewWallet["address"]) => void;
-  onSelectWallet: (choice: NewWallet["address"] | null) => void;
-};
+export type WalletInfo = Pick<
+  UseWallets,
+  | "onDeleteWallet"
+  | "onRevealXPriv"
+  | "selectedWallet"
+  | "onSelectWallet"
+  | "loadingRevealXPriv"
+  | "handleCopy"
+>;
 
 const WalletInfo = ({
   onDeleteWallet,
   onRevealXPriv,
   selectedWallet,
   onSelectWallet,
+  loadingRevealXPriv,
+  handleCopy,
 }: WalletInfo) => {
   const XPRIV_HIDDEN = selectedWallet?.xpriv === "hidden";
 
@@ -33,7 +38,6 @@ const WalletInfo = ({
   }
 
   const TimestampTemplate = tinydate("{DD}/{MM}/{YY} at {HH}:{mm}:{ss}");
-  console.log(selectedWallet.created);
   return (
     <div className="address flex size-full flex-col items-center gap-y-2 rounded-md">
       <Card className="flex size-full flex-col gap-y-2 border-brand-olive-500/50 bg-white p-4">
@@ -53,7 +57,14 @@ const WalletInfo = ({
         <CardContent className="flex flex-col gap-2 p-0">
           <div className="flex items-baseline justify-between">
             <span className="font-bold">Public Key</span>
-            <Button variant="outline">
+            <Button
+              variant="outline"
+              onClick={() =>
+                handleCopy(selectedWallet!.address, {
+                  title: "Public Key Copied!",
+                })
+              }
+            >
               <Icon
                 icon="mingcute:copy-line"
                 className="w-full text-brand-olive-500"
@@ -70,8 +81,12 @@ const WalletInfo = ({
                 {!XPRIV_HIDDEN && (
                   <Button
                     variant="outline"
-                    // FIXME needs to get copy function from context
-                    // onClick={() => onRevealXPriv(index, wallet.xprivSealed)}
+                    onClick={() =>
+                      handleCopy(selectedWallet!.address, {
+                        title: "XPriv Key Copied!",
+                        description: "Keep this somewhere safe!",
+                      })
+                    }
                   >
                     <Icon
                       icon="mingcute:copy-line"
@@ -83,14 +98,18 @@ const WalletInfo = ({
                   variant="outline"
                   onClick={() => onRevealXPriv(selectedWallet.xprivSealed)}
                 >
-                  <Icon
-                    icon={
-                      XPRIV_HIDDEN
-                        ? "mingcute:eye-close-line"
-                        : "mingcute:eye-2-line"
-                    }
-                    className="w-full text-brand-olive-500"
-                  />
+                  {loadingRevealXPriv ? (
+                    <Icon className="animate-spin" icon="ri:loader-fill" />
+                  ) : (
+                    <Icon
+                      icon={
+                        XPRIV_HIDDEN
+                          ? "mingcute:eye-close-line"
+                          : "mingcute:eye-2-line"
+                      }
+                      className="w-full text-brand-olive-500"
+                    />
+                  )}
                 </Button>
               </div>
             </div>

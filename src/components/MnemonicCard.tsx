@@ -1,6 +1,5 @@
 "use client";
-import { generateMasterKey, revealMnemonic } from "@/app/actions";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
 import {
@@ -9,25 +8,15 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Icon } from "@iconify-icon/react";
-import { useToast } from "@/hooks/use-toast";
-import { useErrorContext } from "./contexts/ErrorHandler";
+import useMnemonic from "@/hooks/use-mnemonic";
 
-const Content = ({
+const Mnemonic = ({
   mnemonicPhrase,
   revealLoading,
 }: {
   mnemonicPhrase: null | string;
   revealLoading: boolean;
 }) => {
-  if (mnemonicPhrase) {
-    return mnemonicPhrase.split(" ").map((word, index) => (
-      <div className="flex flex-col justify-center" key={index}>
-        <span>{index + 1}</span>
-        <div className="rounded-lg bg-brand-olive-300 p-2">{word}</div>
-      </div>
-    ));
-  }
-
   if (revealLoading) {
     return (
       <div className="flex items-center text-lg">
@@ -36,65 +25,25 @@ const Content = ({
       </div>
     );
   }
-  return <p className="text-lg">Hidden</p>;
+  let wordArray: string[];
+
+  if (mnemonicPhrase) {
+    wordArray = mnemonicPhrase.split(" ");
+  } else {
+    wordArray = new Array(12).fill("xxxxx");
+  }
+
+  return wordArray.map((word, index) => (
+    <div className="flex flex-col justify-center" key={index}>
+      <span>{index + 1}</span>
+      <div className="rounded-lg bg-brand-olive-300 p-2">{word}</div>
+    </div>
+  ));
 };
 
 const MnemonicCard = () => {
-  const { toast } = useToast();
-  const { setError } = useErrorContext();
-  const [mnemonicPhrase, setMnemonicPhrase] = useState<null | string>(null);
-  const [revealLoading, setRevealLoading] = useState(false);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        await generateMasterKey();
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message as string);
-        }
-      }
-    };
-    getData();
-  }, [toast, setError]);
-
-  const onRevealRequest = async () => {
-    if (!mnemonicPhrase) {
-      try {
-        setRevealLoading(true);
-        const response = await revealMnemonic();
-        if (response) {
-          setMnemonicPhrase(response);
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          return toast({
-            title: "Could not reveal mnemonic",
-            description: error.message as string,
-          });
-        }
-      } finally {
-        setRevealLoading(false);
-      }
-    } else {
-      setMnemonicPhrase(null);
-    }
-  };
-
-  const handleCopy = async (
-    copyItem: string,
-    successMessage: { title: string; description?: string },
-  ) => {
-    try {
-      await navigator.clipboard?.writeText(copyItem);
-      return toast(successMessage);
-    } catch (error) {
-      if (error)
-        return toast({
-          title: "Could not copy",
-        });
-    }
-  };
+  const { mnemonicPhrase, revealLoading, onRevealMasterKey, handleCopy } =
+    useMnemonic();
 
   return (
     <>
@@ -127,14 +76,14 @@ const MnemonicCard = () => {
             <CollapsibleContent className="flex w-full justify-center">
               <CardContent className="mb-4 mt-8 flex flex-col items-center gap-y-4 lg:w-5/6">
                 <div className="flex flex-wrap justify-center gap-2 rounded-md border border-amber-300 bg-white/50 p-4">
-                  <Content
+                  <Mnemonic
                     mnemonicPhrase={mnemonicPhrase}
                     revealLoading={revealLoading}
                   />
                 </div>
                 <div className="flex gap-x-4">
                   {" "}
-                  <Button disabled={revealLoading} onClick={onRevealRequest}>
+                  <Button disabled={revealLoading} onClick={onRevealMasterKey}>
                     {mnemonicPhrase ? (
                       <>
                         Hide Phrase <Icon icon="mingcute:eye-close-line" />
