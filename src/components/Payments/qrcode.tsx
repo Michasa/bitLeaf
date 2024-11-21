@@ -1,17 +1,18 @@
 import React from "react";
 import { Button } from "../ui/button";
-import { SubmittedForm } from ".";
+import { SavedPayment } from "@/lib/types";
 
 type QRCodeShare = {
-  submittedForm: SubmittedForm | null;
+  createdPayment: SavedPayment | null;
+  setOpenPaymentDialog: (arg: boolean) => void;
 };
 
-const QRCodeShare = ({ submittedForm }: QRCodeShare) => {
+const QRCodeShare = ({ createdPayment, setOpenPaymentDialog }: QRCodeShare) => {
   return (
     <div>
       <div className="flex">
-        {JSON.stringify(submittedForm)}
-        <Button onClick={() => console.log(close)}>Close</Button>
+        {JSON.stringify(createdPayment)}
+        <Button onClick={() => setOpenPaymentDialog(false)}>Close</Button>
       </div>
     </div>
   );

@@ -11,7 +11,6 @@ import {
 } from "../ui/card";
 import SelectedWalletEmpty from "./emptyUI/SelectedWallet";
 import tinydate from "tinydate";
-import { DialogTrigger } from "@radix-ui/react-dialog";
 import { StateHandler } from "../context/StateHandler";
 
 export type WalletInfo = Pick<
@@ -21,7 +20,7 @@ export type WalletInfo = Pick<
   | "selectedWallet"
   | "onSelectWallet"
   | "loadingRevealXPriv"
->;
+> & { setOpenPaymentDialog: (arg: boolean) => void };
 
 const WalletInfo = ({
   onDeleteWallet,
@@ -29,6 +28,7 @@ const WalletInfo = ({
   selectedWallet,
   onSelectWallet,
   loadingRevealXPriv,
+  setOpenPaymentDialog,
 }: WalletInfo) => {
   const XPRIV_HIDDEN = selectedWallet?.xpriv === "hidden";
 
@@ -124,31 +124,33 @@ const WalletInfo = ({
             </span>
           </div>
         </CardContent>
-        <CardFooter className="mt-8 flex w-full flex-col justify-center gap-y-2 p-0 *:w-1/2 *:md:w-4/6 *:lg:w-5/6">
-          <DialogTrigger asChild>
-            <Button className="group text-center">
-              <Icon
-                icon="bitcoin-icons:bitcoin-circle-filled"
-                className="-rotate-12 text-3xl text-white hover:scale-125"
-              />{" "}
-              Make a Payment Payment
-            </Button>
-          </DialogTrigger>
+        <CardFooter className="mt-8 flex w-full flex-col justify-center gap-y-2 p-0 *:w-full *:md:w-4/6 *:lg:w-5/6">
+          <Button
+            className="group text-center"
+            onClick={() => setOpenPaymentDialog(true)}
+          >
+            <Icon
+              icon="tabler:mood-bitcoin"
+              className="-rotate-12 text-3xl text-white hover:scale-125"
+            />{" "}
+            Create Payment Request
+          </Button>
+
           <Button className="group text-center">
             <Icon
-              icon="hugeicons:bitcoin-03"
+              icon="hugeicons:bitcoin-receive"
               className="text-2xl text-white hover:scale-125"
             />
             See Payment Requests
           </Button>
           <Button
             variant="destructive"
-            className="group text-center text-lg"
+            className="group text-center"
             onClick={() => onDeleteWallet(selectedWallet.address)}
           >
             <Icon
               icon="mingcute:delete-2-fill"
-              className="text-white group-hover:scale-125"
+              className="text-xl text-white group-hover:scale-125"
             />
             Delete Wallet
           </Button>

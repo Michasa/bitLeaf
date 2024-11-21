@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import {
+  MAX_LABEL_CHAR_COUNT,
   MAX_MESSAGE_CHAR_COUNT,
   MAX_REQ_AMOUNT,
   MIN_REQ_AMOUNT,
@@ -25,12 +26,10 @@ import {
 import { Textarea } from "../ui/textarea";
 import { StateHandler } from "../context/StateHandler";
 import { UseFormReturn } from "react-hook-form";
-import { SubmittedForm } from ".";
 import { cn } from "@/lib/utils";
+import { SubmittedForm } from "@/lib/types";
 
 type FormPage = Pick<StateHandler, "selectedWallet" | "wallets"> & {
-  // onUpdateCurrentPage: (arg: number) => void;
-  // setCurrentForm: (arg: SubmittedForm) => void;
   form: UseFormReturn<SubmittedForm>;
   onSubmit: (arg: SubmittedForm) => void;
 };
@@ -39,13 +38,22 @@ const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
   const { watch, register } = form;
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <FormDescription className="text-right">
+        Fields with <span className="text-lg text-red-500">*</span> are required
+      </FormDescription>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col items-center space-y-8"
+      >
         <FormField
           name="recipientAddress"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-full">
               <div className="flex w-full justify-between">
-                <FormLabel>Recipient Address</FormLabel>
+                <FormLabel>
+                  Recieving Address{" "}
+                  <span className="text-lg text-red-500">*</span>
+                </FormLabel>
                 <FormMessage />
               </div>
               <Select
@@ -68,8 +76,7 @@ const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
                 </SelectContent>
               </Select>
               <FormDescription>
-                (Previously selected wallet is set as the default payment
-                option.)
+                Previously selected wallet is set as the default payment option.
               </FormDescription>
             </FormItem>
           )}
@@ -79,9 +86,13 @@ const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
           name="amount"
           render={({ field }) => {
             return (
-              <FormItem>
+              <FormItem className="w-full">
                 <div className="flex w-full justify-between">
-                  <FormLabel>Amount Request (BTC)</FormLabel> <FormMessage />
+                  <FormLabel>
+                    Amount Requested (BTC)
+                    <span className="text-lg text-red-500">*</span>
+                  </FormLabel>{" "}
+                  <FormMessage />
                 </div>
 
                 <FormControl>
@@ -106,23 +117,62 @@ const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
           name="label"
           render={({ field }) => {
             const label = watch("label");
-            const wordCount = label ? label.length : null;
+            const wordCount = label ? label.length : 0; // Changed from null to 0
+
             return (
-              <FormItem>
+              <FormItem className="w-full">
                 <div className="flex w-full justify-between">
-                  <FormLabel>Message (Optional)</FormLabel> <FormMessage />
+                  <FormLabel>Label</FormLabel>
+                  <FormMessage />
                 </div>
                 <FormControl>
-                  <Textarea
-                    placeholder="Add an option message to this request!"
+                  <Input
+                    type="text"
+                    placeholder="The purpose of this payment"
                     className="resize-none"
                     {...field}
                     {...register("label")}
                   />
                 </FormControl>
                 <FormDescription className="w-full text-end italic">
+                  <span
+                    className={cn(
+                      wordCount > MAX_LABEL_CHAR_COUNT &&
+                        "font-bold text-red-500",
+                    )}
+                  >
+                    {wordCount}
+                  </span>
+                  {" / "}
+                  {MAX_LABEL_CHAR_COUNT} characters
+                </FormDescription>
+              </FormItem>
+            );
+          }}
+        />
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => {
+            const message = watch("message");
+            const wordCount = message ? message.length : null;
+            return (
+              <FormItem className="w-full">
+                <div className="flex w-full justify-between">
+                  <FormLabel>Message </FormLabel> <FormMessage />
+                </div>
+                <FormControl>
+                  <Textarea
+                    defaultValue={undefined}
+                    placeholder="Why not add a message to this request?"
+                    className="resize-none"
+                    {...field}
+                    {...register("message")}
+                  />
+                </FormControl>
+                <FormDescription className="w-full text-end italic">
                   {wordCount !== null ? (
-                    <div>
+                    <>
                       <span
                         className={cn(
                           wordCount > MAX_MESSAGE_CHAR_COUNT &&
@@ -132,7 +182,7 @@ const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
                         {wordCount}
                       </span>{" "}
                       / {MAX_MESSAGE_CHAR_COUNT} characters
-                    </div>
+                    </>
                   ) : (
                     ""
                   )}
@@ -141,7 +191,9 @@ const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
             );
           }}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="w-1/2">
+          Submit
+        </Button>
       </form>
     </Form>
   );

@@ -26,3 +26,15 @@ export interface UseMnemonic {
   onRevealMasterKey: () => void;
 }
 
+export type SubmittedForm = {
+  recipientAddress: string;
+  amount: number;
+  label?: string | undefined;
+  message?: string | undefined;
+};
+
+export type SavedPayment = SubmittedForm & {
+  created: Date,
+  paid: false,
+  uri: string,
+}

@@ -5,19 +5,25 @@ import FormSchema from "@/lib/formSchema";
 import { z } from "zod";
 import { StateHandler } from "../context/StateHandler";
 import FormPage from "./form";
-import Confirmation from "./qrcode";
+import QRCodeShare from "./qrcode";
+import { SavedPayment, SubmittedForm } from "@/lib/types";
+import { MIN_REQ_AMOUNT } from "@/lib/constants";
+import { useToast } from "@/hooks/use-toast";
+import { createPaymentURI, sanitizeAndEncodeValues } from "@/lib/utils";
 
-type PaymentsFlow = Pick<StateHandler, "selectedWallet" | "wallets">;
-
-export type SubmittedForm = {
-  recipientAddress: string;
-  amount: number;
-  label?: string | undefined;
+type PaymentsFlow = Pick<StateHandler, "selectedWallet" | "wallets"> & {
+  setOpenPaymentDialog: (arg: boolean) => void;
 };
 
-const PaymentsFlow = ({ selectedWallet, wallets }: PaymentsFlow) => {
+const PaymentsFlow = ({
+  selectedWallet,
+  wallets,
+  setOpenPaymentDialog,
+}: PaymentsFlow) => {
+  const { toast } = useToast();
+
   const [page, setPage] = useState<number>(1);
-  const [submittedForm, setSubmittedForm] = useState<SubmittedForm | null>(
+  const [createdPayment, setCreatedPayment] = useState<SavedPayment | null>(
     null,
   );
 
@@ -31,18 +37,35 @@ const PaymentsFlow = ({ selectedWallet, wallets }: PaymentsFlow) => {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       recipientAddress: selectedWallet?.address,
-      amount: undefined,
-      label: undefined,
+      amount: MIN_REQ_AMOUNT,
+      label: "",
+      message: "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    //TODO sanatise values
+    //todo if no values crash appp
+    const sanitizedValues = sanitizeAndEncodeValues(values);
+
+    if (Object.keys(sanitizedValues).length === 0) {
+      toast({
+        title: "Could not process payment request!",
+        description:
+          "Something went wrong when preparing the QR Code, please restart payments again",
+      });
+    }
+
+    const paymentURI = createPaymentURI(sanitizedValues);
+
+    const newPayment = {
+      ...(sanitizedValues as SubmittedForm),
+      created: new Date(),
+      paid: false,
+      uri: paymentURI,
+    } satisfies SavedPayment;
+
+    setCreatedPayment(newPayment);
     onUpdateCurrentPage(2);
-    setSubmittedForm(values);
-    console.log(values, "hihih");
   };
 
   const renderPage = () => {
@@ -57,13 +80,22 @@ const PaymentsFlow = ({ selectedWallet, wallets }: PaymentsFlow) => {
           />
         );
       case 2:
-        return <Confirmation submittedForm={submittedForm} />;
+        return (
+          <QRCodeShare
+            createdPayment={createdPayment}
+            setOpenPaymentDialog={setOpenPaymentDialog}
+          />
+        );
       default:
         return <div>Oops, you weren't suppose to see this!!</div>;
     }
   };
 
-  return <>{renderPage()}</>;
+  return (
+    <div className="h-full overflow-scroll rounded-md border border-slate-500/50 p-4 md:p-8">
+      {renderPage()}
+    </div>
+  );
 };
 
 export default PaymentsFlow;

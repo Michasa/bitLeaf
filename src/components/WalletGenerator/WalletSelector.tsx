@@ -64,11 +64,14 @@ const WalletSelector = ({
             Loading
           </>
         ) : (
-          "Create a New Wallet"
+          <>
+            <Icon icon="fa6-solid:seedling" className="text-xl" />
+            Create a New Wallet
+          </>
         )}
       </Button>
       {TOO_MANY_WALLETS && (
-        <div className="flex items-center gap-x-2 self-center">
+        <div className="flex items-center gap-x-2 self-center rounded-md bg-white p-2">
           <Icon icon="si:warning-duotone" className="text-xl text-amber-500" />
           <span className="text-base">
             Max wallets created! Delete an existing wallet in-order to create a

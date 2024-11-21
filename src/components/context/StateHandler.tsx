@@ -122,6 +122,8 @@ export const StateHandlerProvider = ({
     }
   };
 
+  // const onUpdateWallet = () => {};
+
   return (
     <StateHandler.Provider
       value={{

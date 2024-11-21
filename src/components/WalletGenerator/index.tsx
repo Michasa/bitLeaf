@@ -6,7 +6,11 @@ import WalletInfo from "./WalletInfo";
 import WalletEmpty from "./emptyUI/Wallet";
 import { useStateContext } from "../context/StateHandler";
 
-const WalletGenerator = () => {
+const WalletGenerator = ({
+  setOpenPaymentDialog,
+}: {
+  setOpenPaymentDialog: (arg: boolean) => void;
+}) => {
   const {
     wallets,
     selectedWallet,
@@ -35,7 +39,7 @@ const WalletGenerator = () => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full 2xl:w-7/12">
       <h2 className="font-bold">
         Your Wallets ({`${wallets.length}/${MAX_WALLETS_ALLOWED}`})
       </h2>
@@ -52,6 +56,7 @@ const WalletGenerator = () => {
           </div>
           <div className="col-span-1 lg:col-span-2">
             <WalletInfo
+              setOpenPaymentDialog={setOpenPaymentDialog}
               onSelectWallet={onSelectWallet}
               onDeleteWallet={onDeleteWallet}
               selectedWallet={selectedWallet}

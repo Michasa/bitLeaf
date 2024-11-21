@@ -3,10 +3,10 @@
 import React from "react";
 import { Icon } from "@iconify-icon/react";
 import { Button } from "../../ui/button";
-import { UseWallets } from "@/lib/types";
+import { StateHandler } from "@/components/context/StateHandler";
 
 export type WalletEmpty = Pick<
-  UseWallets,
+  StateHandler,
   "onCreateNewWallet" | "loadingNewWallet"
 >;
 

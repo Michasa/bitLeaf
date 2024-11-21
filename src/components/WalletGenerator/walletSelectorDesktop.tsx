@@ -97,7 +97,7 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
                   </div>
                   <div className="mb-0 mt-4 flex w-full flex-col space-y-2 font-orbitron text-lg font-bold">
                     <p>Payments</p>
-                    <div className="flex justify-evenly gap-x-2 font-semibold">
+                    <div className="grid auto-cols-fr grid-flow-col justify-evenly gap-x-2 font-semibold">
                       <PaymentFigures
                         number={0}
                         label="Pending"
@@ -111,7 +111,7 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="flex w-full justify-between gap-x-2 p-0">
+                <CardFooter className="group flex w-full justify-between gap-x-2 p-0">
                   <div className="inline-block text-wrap font-orbitron">
                     <span className="text-sm font-bold"> Created At:</span>
                     <br />
@@ -124,6 +124,13 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
                       onSelectWallet(address);
                     }}
                   >
+                    <Icon
+                      icon="material-symbols:check-box"
+                      className={cn(
+                        "text-xl text-white",
+                        isSelected ? "" : "hidden scale-110 group-hover:block",
+                      )}
+                    />
                     Select Wallet
                   </Button>
                 </CardFooter>
