@@ -6,18 +6,23 @@ export interface SessionData {
 }
 export interface NewWallet {
   created: Date
-  address: string
-  xpriv: "hidden" | string
-  xprivSealed: string
+  address: string //public address to recieve funds
+  xpriv: "hidden" | string //will be sent hidden unless user requests to see it
+  xprivSealed: string //sealed version of xpriv decrypted on server
+  payments: Payment[] | []
 }
 
+export interface Payment {
+  recipientAddress: string
+  amount: number
+  label: string
+  date: Date
+  isPaid: boolean
+}
 
 export interface UseMnemonic {
   revealLoading: boolean;
   mnemonicPhrase: string | null;
   onRevealMasterKey: () => void;
-  handleCopy: (
-    copyItem: string,
-    toastMessage: { title: string; description?: string }
-  ) => void
 }
+

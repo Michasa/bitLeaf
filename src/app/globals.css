@@ -35,8 +35,12 @@ body {
     }
   }
 
+  .text-shadow-active {
+    text-shadow: 2px 2px 2px hsl(37.68deg 100% 60.35% / 82%);
+  }
+
   .text-shadow {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 1px 1.5px white;
   }
 
   .debug {

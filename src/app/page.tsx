@@ -1,4 +1,4 @@
-import StartDashboard from "@/components/views/dashboard";
+import StartDashboard from "@/components/app-views/dashboard";
 
 export default async function Home() {
   return (

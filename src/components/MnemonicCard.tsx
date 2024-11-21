@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Icon } from "@iconify-icon/react";
 import useMnemonic from "@/hooks/use-mnemonic";
+import { handleCopy } from "@/lib/utils";
 
 const Mnemonic = ({
   mnemonicPhrase,
@@ -42,8 +43,7 @@ const Mnemonic = ({
 };
 
 const MnemonicCard = () => {
-  const { mnemonicPhrase, revealLoading, onRevealMasterKey, handleCopy } =
-    useMnemonic();
+  const { mnemonicPhrase, revealLoading, onRevealMasterKey } = useMnemonic();
 
   return (
     <>

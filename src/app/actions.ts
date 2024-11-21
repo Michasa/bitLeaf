@@ -6,6 +6,7 @@ import HDKey from 'hdkey'
 import { getIronSession, IronSession, sealData, unsealData } from "iron-session"
 import { cookies } from "next/headers"
 import * as bitcoin from 'bitcoinjs-lib';
+
 import { CANNOT_CREATE_PUB_ADD, CANNOT_DECRYPT, CREATION_FAIL_MSG, NO_MNEMONIC, NO_SECRET_PASSWORD, NO_SEED_FOUND, NO_XWALLET, COULDNT_CREATE_COOKIES, NO_SECRET_PASSWORD2 } from "@/lib/errorMessages"
 
 const D_PATH_TEMPLATE = "m/44'/1'/0'/"
@@ -87,7 +88,8 @@ export async function createXWallet(): Promise<NewWallet | void> {
     created: timeStamp,
     address: address,
     xpriv: 'hidden',
-    xprivSealed
+    xprivSealed,
+    payments: []
   }
 }
 

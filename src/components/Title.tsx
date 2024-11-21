@@ -23,7 +23,7 @@ const Title = () => {
         <p className="animate-fade-up animate-duration-1000 animate-once animate-ease-linear">
           Your friends will pay you back
         </p>
-        <p className="animate-shake animate-delay-[1200ms] animate-duration-500 animate-once animate-ease-in">
+        <p className="animate-shake font-bold text-brand-olive-600 underline decoration-amber-400 decoration-wavy animate-delay-[1200ms] animate-duration-500 animate-once animate-ease-in">
           ...right?
         </p>
       </div>

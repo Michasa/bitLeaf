@@ -50,11 +50,7 @@ const WalletSelector = ({
         disabled={TOO_MANY_WALLETS || loadingNewWallet}
         onClick={async () => {
           const wallet = await onCreateNewWallet();
-          if (
-            wallet &&
-            ref.current !== null &&
-            ref.current?.scrollWidth > ref.current?.clientWidth
-          ) {
+          if (wallet && ref.current !== null) {
             setTimeout(() => {
               (ref.current as HTMLElement).scrollLeft = ref.current
                 ?.scrollWidth as number;

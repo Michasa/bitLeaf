@@ -16,7 +16,7 @@ export default {
 			colors: {
 				brand: {
 					light: '#F6FCDF',
-					dark: '#1A1A19',
+					dark: '#1B2D11',
 					olive: {
 						'100': '#BDD186',
 						'200': '#ADC568',

@@ -11,7 +11,10 @@ const Error = () => {
         <br /> There was an app disrupting error
       </h1>
       <Image src={logo} alt="broken tree branch" className="object-contain" />
-      <p>please refresh to restart the app</p>
+      <p>
+        Check the console for more information or the page to refresh to restart
+        the app
+      </p>
     </div>
   );
 };

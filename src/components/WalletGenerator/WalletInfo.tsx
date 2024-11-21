@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { Icon } from "@iconify-icon/react";
-import { cn } from "@/lib/utils";
+import { cn, handleCopy } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -10,17 +10,17 @@ import {
   CardTitle,
 } from "../ui/card";
 import SelectedWalletEmpty from "./emptyUI/SelectedWallet";
-import { UseWallets } from "@/lib/types";
 import tinydate from "tinydate";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import { StateHandler } from "../context/StateHandler";
 
 export type WalletInfo = Pick<
-  UseWallets,
+  StateHandler,
   | "onDeleteWallet"
   | "onRevealXPriv"
   | "selectedWallet"
   | "onSelectWallet"
   | "loadingRevealXPriv"
-  | "handleCopy"
 >;
 
 const WalletInfo = ({
@@ -29,7 +29,6 @@ const WalletInfo = ({
   selectedWallet,
   onSelectWallet,
   loadingRevealXPriv,
-  handleCopy,
 }: WalletInfo) => {
   const XPRIV_HIDDEN = selectedWallet?.xpriv === "hidden";
 
@@ -41,7 +40,7 @@ const WalletInfo = ({
   return (
     <div className="address flex size-full flex-col items-center gap-y-2 rounded-md">
       <Card className="flex size-full flex-col gap-y-2 border-brand-olive-500/50 bg-white p-4">
-        <CardTitle className="flex justify-between font-bold uppercase">
+        <CardTitle className="flex items-center justify-between font-bold uppercase">
           Wallet Details
           <Button onClick={() => onSelectWallet(null)}>
             <Icon icon="mingcute:close-fill" className="text-xl" />
@@ -126,13 +125,32 @@ const WalletInfo = ({
           </div>
         </CardContent>
         <CardFooter className="mt-8 flex w-full flex-col justify-center gap-y-2 p-0 *:w-1/2 *:md:w-4/6 *:lg:w-5/6">
-          <Button>Request Payment</Button>
-          <Button>See Payment Requests</Button>
+          <DialogTrigger asChild>
+            <Button className="group text-center">
+              <Icon
+                icon="bitcoin-icons:bitcoin-circle-filled"
+                className="-rotate-12 text-3xl text-white hover:scale-125"
+              />{" "}
+              Make a Payment Payment
+            </Button>
+          </DialogTrigger>
+          <Button className="group text-center">
+            <Icon
+              icon="hugeicons:bitcoin-03"
+              className="text-2xl text-white hover:scale-125"
+            />
+            See Payment Requests
+          </Button>
           <Button
             variant="destructive"
+            className="group text-center text-lg"
             onClick={() => onDeleteWallet(selectedWallet.address)}
           >
-            Delete
+            <Icon
+              icon="mingcute:delete-2-fill"
+              className="text-white group-hover:scale-125"
+            />
+            Delete Wallet
           </Button>
         </CardFooter>
       </Card>

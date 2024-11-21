@@ -46,22 +46,9 @@ const useMnemonic = () => {
     }
   };
 
-  const handleCopy = async (
-    copyItem: string,
-    toastMessage: { title: string; description?: string },
-  ) => {
-    try {
-      await navigator.clipboard?.writeText(copyItem);
-      return toast(toastMessage);
-    } catch (error) {
-      if (error)
-        return toast({
-          title: "Could not copy",
-        });
-    }
-  };
 
-  return { revealLoading, mnemonicPhrase, onRevealMasterKey, handleCopy };
+
+  return { revealLoading, mnemonicPhrase, onRevealMasterKey, };
 };
 
 export default useMnemonic;

@@ -5,6 +5,8 @@ import WalletGenerator from "../WalletGenerator/index";
 import Title from "../Title";
 import { ErrorHandlerProvider } from "../context/ErrorHandler";
 import { StateHandlerProvider } from "../context/StateHandler";
+import { Dialog } from "../ui/dialog";
+import PaymentDialog from "./payment-dialog";
 
 const StartDashboard = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -23,8 +25,11 @@ const StartDashboard = () => {
       <ErrorHandlerProvider>
         <StateHandlerProvider>
           <div className="flex w-full flex-col items-center gap-y-4">
-            <MnemonicCard />
-            <WalletGenerator />
+            <Dialog>
+              <MnemonicCard />
+              <WalletGenerator />
+              <PaymentDialog />
+            </Dialog>
           </div>
         </StateHandlerProvider>
       </ErrorHandlerProvider>

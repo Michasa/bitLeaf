@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import Error from "../views/error";
+import Error from "../app-views/error";
 
 interface ErrorHandler {
   setError: (errorMessage: string | null) => void;
