@@ -1,28 +1,26 @@
 import React, { useState } from "react";
 import {
   Table,
-  TableBody,
-  TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
+  TableBody,
   TableRow,
 } from "@/components/ui/table";
 import { Icon } from "@iconify-icon/react";
 import { useStateContext } from "../context/StateHandler";
-import { DetailLabels, formatForDisplay } from "@/lib/utils";
-import { Button } from "../ui/button";
+import { DetailLabels as Headers, formatForTable } from "@/lib/utils";
 import QRCodeDialog from "./dialog";
-import { QRCodeDialogData, SavedPayment } from "@/lib/types";
+import { PaymentTableData, QRCodeDialogData } from "@/lib/types";
+import TableContent from "./content";
 
 const EmptyUI = () => (
-  <>
-    <Icon icon="fa6-solid:seedling" className="text-6xl text-brand-olive-300" />
-    <p className="text-center text-xl italic text-slate-500">
+  <div className="my-8 flex w-full flex-col items-center rounded-md border bg-slate-300/80 p-4 text-slate-700/80">
+    <Icon icon="mynaui:sad-square-solid" className="text-6xl" />
+    <p className="text-center text-xl italic">
       You don't have any payment requests.
       <br /> Select a wallet and create your first one!
     </p>
-  </>
+  </div>
 );
 
 const PaymentsTable = () => {
@@ -30,87 +28,39 @@ const PaymentsTable = () => {
   const [openQRCodeDialog, setOpenQRCodeDialog] = useState(false);
   const [selectedQRCode, setSelectedQRCode] = useState<QRCodeDialogData>(null);
 
-  const totalPayments = wallets.length
-    ? wallets.map((wallet) =>
-        wallet.payments.map((payment) => {
-          const { label, message, uri, recipientAddress, amount, ...rest } =
-            payment;
-          const dialogInfo = formatForDisplay({
-            recipientAddress,
-            amount,
-            label,
-            message,
-            uri,
-          });
-          const tableInfo = formatForDisplay({
-            recipientAddress,
-            amount,
-            ...rest,
-          });
+  const tableData = formatForTable(wallets);
 
-          return {
-            tableInfo,
-            dialogInfo,
-          };
-        }),
-      )
-    : 0;
-
-  const onShowQR = (
-    dialogInfo: Pick<SavedPayment, "uri" | "label" | "message">,
-  ) => {
+  const onShowQR = (dialogInfo: PaymentTableData[number]["dialogData"]) => {
     setSelectedQRCode(dialogInfo);
     setOpenQRCodeDialog(true);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { label, message, uri, ...TableHeaders } = DetailLabels;
+  const { label, message, uri, ...TableHeaders } = Headers;
 
   return (
     <>
       <div className="w-full 2xl:w-9/12">
         <h2 className="font-bold">Your Payment Requests</h2>
-        <Table className="w-full border-separate border-spacing-x-1 bg-brand-olive-100/30">
-          <TableHeader>
-            <TableRow className="*:bg-brand-olive-400 *:text-white">
-              {Object.values(TableHeaders).map((header) => (
-                <TableHead key={header}>{header}</TableHead>
-              ))}
-              <TableHead className="bg-brand-olive-600 text-center text-white">
-                Request QRCode
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          {totalPayments === 0 ? (
-            <TableCaption className="my-8 w-full grayscale">
-              <EmptyUI />
-            </TableCaption>
-          ) : (
+        {tableData.length ? (
+          <Table className="w-full border-separate border-spacing-x-1 bg-brand-olive-100/30">
+            <TableHeader>
+              <TableRow className="*:bg-brand-olive-400 *:text-white">
+                {Object.values(TableHeaders).map((header) => (
+                  <TableHead key={header}>{header}</TableHead>
+                ))}
+                <TableHead className="bg-brand-olive-600 text-center text-white">
+                  Request QRCode
+                </TableHead>
+              </TableRow>
+            </TableHeader>
             <TableBody>
-              {totalPayments.map((walletPayments, walletIndex) =>
-                walletPayments.map(
-                  ({ tableInfo, dialogInfo }, paymentIndex) => (
-                    <TableRow key={`${walletIndex}-${paymentIndex}`}>
-                      {Object.values(tableInfo).map(
-                        (detail, index) =>
-                          detail && (
-                            <TableCell key={index} className="font-medium">
-                              {detail}
-                            </TableCell>
-                          ),
-                      )}
-                      <TableCell className="font-medium">
-                        <Button onClick={() => onShowQR(dialogInfo)}>
-                          See Code
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ),
-                ),
-              )}
+              <TableContent tableData={tableData} onShowQR={onShowQR} />
             </TableBody>
-          )}
-        </Table>
+          </Table>
+        ) : (
+          <EmptyUI />
+        )}
       </div>
       <QRCodeDialog
         selectedQRCode={selectedQRCode}

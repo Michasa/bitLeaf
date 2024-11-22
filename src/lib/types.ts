@@ -19,8 +19,8 @@ export interface UseMnemonic {
   onRevealMasterKey: () => void;
 }
 
-export interface SubmittedForm {
-  recipientAddress: string;
+export interface SubmittedPaymentForm {
+  address: string;
   amount: number;
   label?: string | undefined;
   message?: string | undefined;
@@ -38,7 +38,8 @@ export enum ReducerAction {
   DELETE = 'DELETE'
 }
 
-export interface SavedPayment extends SubmittedForm {
+
+export interface SavedPayment extends SubmittedPaymentForm {
   created: Date;
   paid: false;
   uri: string;
@@ -50,3 +51,7 @@ export type QRCodeDialogData = Partial<
     string
   >
 > | null;
+
+export type LabelData = Partial<Record<keyof typeof DetailLabels, string>>;
+
+export type PaymentTableData = { cellData: LabelData; dialogData: LabelData }[];

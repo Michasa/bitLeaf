@@ -20,10 +20,10 @@ const Mnemonic = ({
 }) => {
   if (revealLoading) {
     return (
-      <div className="flex items-center justify-center text-lg">
+      <span className="flex size-fit items-center justify-center gap-x-2 text-lg">
         <Icon className="animate-spin" icon="ri:loader-fill" />
         Loading
-      </div>
+      </span>
     );
   }
   const wordArray = mnemonicPhrase
@@ -69,12 +69,12 @@ const MnemonicCard = () => {
                 className="m-4 aspect-square text-5xl text-amber-400 hover:text-amber-600"
               />
             </CollapsibleTrigger>
-            <CollapsibleContent className="flex w-full justify-center">
+            <CollapsibleContent className="flex !w-full justify-center">
               <CardContent className="mb-4 mt-8 flex flex-col items-center gap-y-4 lg:w-5/6">
                 <div
                   className={cn(
-                    "flex w-full flex-wrap justify-center gap-2 rounded-md p-4",
-                    !revealLoading && "border border-amber-300 bg-white/50",
+                    "flex w-full flex-wrap justify-center gap-2 rounded-md",
+                    !revealLoading && "border border-amber-300 bg-white/50 p-4",
                   )}
                 >
                   <Mnemonic

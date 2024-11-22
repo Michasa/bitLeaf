@@ -6,7 +6,7 @@ import { z } from "zod";
 import { StateHandler } from "../context/StateHandler";
 import FormPage from "./form";
 import QRCodeShare from "./qrcode";
-import { PageType, SavedPayment, SubmittedForm } from "@/lib/types";
+import { PageType, SavedPayment, SubmittedPaymentForm } from "@/lib/types";
 import { MIN_REQ_AMOUNT } from "@/lib/constants";
 import { createPaymentURI, sanitizeAndEncodeValues } from "@/lib/utils";
 import Error from "./error";
@@ -39,7 +39,7 @@ const PaymentsFlow = ({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      recipientAddress: selectedWallet?.address,
+      address: selectedWallet?.address,
       amount: MIN_REQ_AMOUNT,
       label: "",
       message: "",
@@ -47,7 +47,7 @@ const PaymentsFlow = ({
   });
 
   const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    if (!values.recipientAddress || !values.amount) {
+    if (!values.address || !values.amount) {
       setPage(PAGES[0]);
       return;
     }
@@ -60,14 +60,14 @@ const PaymentsFlow = ({
     }
 
     const newPayment = {
-      ...(sanitizedValues as SubmittedForm),
+      ...(sanitizedValues as SubmittedPaymentForm),
       created: new Date(),
       paid: false,
       uri: createPaymentURI(sanitizedValues),
     } satisfies SavedPayment;
 
     const index = wallets.findIndex(
-      (wallet) => wallet.address === newPayment.recipientAddress,
+      (wallet) => wallet.address === newPayment.address,
     );
 
     if (index === -1) {
@@ -90,7 +90,7 @@ const PaymentsFlow = ({
     onUpdateWallet(updatingWallet);
     toast({
       title: "Payment request created!",
-      description: `For ${newPayment.amount} BTC to ${newPayment.recipientAddress}`,
+      description: `For ${newPayment.amount} BTC to ${newPayment.address}`,
     });
     setPage(PAGES[2]);
   };

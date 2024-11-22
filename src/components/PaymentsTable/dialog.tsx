@@ -34,17 +34,14 @@ const QRCodeDialog = ({
         </DialogHeader>{" "}
         <div className="flex flex-col items-center justify-center gap-y-2 bg-white p-4">
           <QRCode className="size-60" value={uri as string} />
-          {Object.entries(rest).map(
-            ([key, value]) =>
-              value && (
-                <div key={key} className="flex w-full flex-col">
-                  <b>{key}</b>
-                  <span className="text-wrap rounded-md border border-brand-olive-400 bg-white p-2">
-                    {value}
-                  </span>
-                </div>
-              ),
-          )}{" "}
+          {Object.entries(rest).map(([key, value]) => (
+            <div key={key} className="flex w-full flex-col">
+              <b>{key}</b>
+              <span className="text-wrap rounded-md border border-brand-olive-400 bg-white p-2">
+                {value ? value : <i> None added</i>}
+              </span>
+            </div>
+          ))}{" "}
         </div>
       </DialogContent>
     </Dialog>

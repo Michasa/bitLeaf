@@ -6,7 +6,7 @@ import * as bitcoin from 'bitcoinjs-lib';
 import { MAX_LABEL_CHAR_COUNT, MAX_MESSAGE_CHAR_COUNT, MAX_REQ_AMOUNT, MIN_REQ_AMOUNT } from "./constants"
 
 const FormSchema = z.object({
-  recipientAddress: z.string().refine(val => {
+  address: z.string().refine(val => {
     try {
       return bitcoin.address.toOutputScript(val, bitcoin.networks.testnet) //check if address valid for testnet
     } catch (error) {

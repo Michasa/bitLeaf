@@ -1,7 +1,7 @@
 import { toast } from "@/hooks/use-toast";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { SavedPayment, SubmittedForm, Wallet } from "./types";
+import { SavedPayment, SubmittedPaymentForm, Wallet, PaymentTableData } from "./types";
 import DOMPurify from "isomorphic-dompurify";
 import tinydate from "tinydate";
 
@@ -26,26 +26,26 @@ export async function handleCopy(
 };
 
 export const sanitizeAndEncodeValues = (
-  values: SubmittedForm,
-): SubmittedForm => {
+  values: SubmittedPaymentForm,
+): SubmittedPaymentForm => {
   return Object.keys(values).reduce((acc, key) => {
-    const value = values[key as keyof SubmittedForm];
+    const value = values[key as keyof SubmittedPaymentForm];
     let sanitizedValue = value;
 
     if (typeof value === "string") {
       sanitizedValue = DOMPurify.sanitize(value);
 
-      if (key !== "recipientAddress") {
+      if (key !== "address") {
         sanitizedValue = encodeURIComponent(sanitizedValue);
       }
     }
 
     return { ...acc, [key]: sanitizedValue };
-  }, {} as SubmittedForm);
+  }, {} as SubmittedPaymentForm);
 };
 
-export const createPaymentURI = (values: SubmittedForm) => {
-  const main = `bitcoin:${values.recipientAddress}?amount=${values.amount}`
+export const createPaymentURI = (values: SubmittedPaymentForm) => {
+  const main = `bitcoin:${values.address}?amount=${values.amount}`
   const label = values.label ? `&label=${values.label}` : ''
   const message = values.message ? `&message=${values.message}` : ''
 
@@ -58,7 +58,7 @@ type PaymentValue = string | number | boolean | Date;
 type ValueHandler = (value: PaymentValue) => string;
 
 export const DetailLabels: Record<keyof SavedPayment, string> = {
-  recipientAddress: "Receiving Wallet Address",
+  address: "Receiving Wallet Address",
   amount: "Amount (BTC)",
   label: "Payment Request Label",
   message: "Payment Message",
@@ -88,7 +88,7 @@ export const formatForDisplay = (paymentInfo: Partial<SavedPayment>): Record<key
   }, {});
 };
 
-export const calculatePayments = (payments: Wallet['payments']) => {
+export const calculatePayments = (payments: Wallet['payments']): { completed: number; pending: number } => {
   const completed = payments.filter(({ paid }) => paid).length;
   const pending = payments.length - completed;
 
@@ -96,6 +96,32 @@ export const calculatePayments = (payments: Wallet['payments']) => {
     completed: Number(completed),
     pending: Number(pending),
   };
+};
+
+export const formatForTable = (wallets: Wallet[]): [] | PaymentTableData => {
+  if (wallets.length === 0) {
+    return [];
+  }
+
+  const allPayments = wallets.reduce(
+    (acc, wallet) => {
+      return [...acc, ...wallet.payments];
+    },
+    [] as Wallet["payments"],
+  );
+
+  if (allPayments.length === 0) {
+    return [];
+  }
+
+  return allPayments.map((payment) => {
+    const { address, amount, created, paid, ...dialogData } = payment;
+
+    return {
+      cellData: formatForDisplay({ address, amount, created, paid }),
+      dialogData: formatForDisplay({ address, amount, ...dialogData }),
+    };
+  });
 };
 
 

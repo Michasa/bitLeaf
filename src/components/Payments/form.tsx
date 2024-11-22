@@ -27,11 +27,11 @@ import { Textarea } from "../ui/textarea";
 import { StateHandler } from "../context/StateHandler";
 import { UseFormReturn } from "react-hook-form";
 import { cn } from "@/lib/utils";
-import { SubmittedForm } from "@/lib/types";
+import { SubmittedPaymentForm } from "@/lib/types";
 
 type FormPage = Pick<StateHandler, "selectedWallet" | "wallets"> & {
-  form: UseFormReturn<SubmittedForm>;
-  onSubmit: (arg: SubmittedForm) => void;
+  form: UseFormReturn<SubmittedPaymentForm>;
+  onSubmit: (arg: SubmittedPaymentForm) => void;
 };
 
 const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
@@ -46,7 +46,7 @@ const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
         className="flex flex-col items-center space-y-8 p-4 md:p-8"
       >
         <FormField
-          name="recipientAddress"
+          name="address"
           render={({ field }) => (
             <FormItem className="w-full">
               <div className="flex w-full justify-between">
