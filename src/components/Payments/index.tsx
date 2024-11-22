@@ -23,7 +23,7 @@ export const PAGES = {
   0: PageType.ERROR,
   1: PageType.FORM,
   2: PageType.QR_CODE,
-} as const;
+};
 
 const PaymentsFlow = ({
   selectedWallet,

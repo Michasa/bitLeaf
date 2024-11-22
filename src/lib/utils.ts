@@ -57,7 +57,7 @@ export const TimestampTemplate = tinydate("{DD}/{MM}/{YY} at {HH}:{mm}:{ss}");
 type PaymentValue = string | number | boolean | Date;
 type ValueHandler = (value: PaymentValue) => string;
 
-const DisplayedInformationLabels: Record<keyof SavedPayment, string> = {
+export const DetailLabels: Record<keyof SavedPayment, string> = {
   recipientAddress: "Receiving Wallet Address",
   amount: "Amount (BTC)",
   label: "Payment Request Label",
@@ -76,15 +76,14 @@ const valueHandlers: Partial<Record<keyof SavedPayment, ValueHandler>> = {
 
 const defaultHandler: ValueHandler = (value) => String(value);
 
-export const parseInfo = (paymentInfo: SavedPayment): Record<string, string> => {
+export const formatForDisplay = (paymentInfo: Partial<SavedPayment>): Record<keyof typeof DetailLabels, string> => {
   return Object.entries(paymentInfo).reduce<Record<string, string>>((acc, [key, value]) => {
     const typedKey = key as keyof SavedPayment;
-    const displayLabel = DisplayedInformationLabels[typedKey];
+    const displayLabel = DetailLabels[typedKey];
 
     const handler = valueHandlers[typedKey] || defaultHandler;
 
     acc[displayLabel] = handler(value);
-
     return acc;
   }, {});
 };

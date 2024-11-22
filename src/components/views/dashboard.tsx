@@ -6,6 +6,7 @@ import Title from "../Title";
 import { ErrorHandlerProvider } from "../context/ErrorHandler";
 import { StateHandlerProvider } from "../context/StateHandler";
 import PaymentDialog from "./payment-dialog";
+import PaymentsTable from "../PaymentsTable";
 
 const StartDashboard = () => {
   const [openPaymentDialog, setOpenPaymentDialog] = useState<boolean>(false);
@@ -18,6 +19,7 @@ const StartDashboard = () => {
           <div className="flex w-full flex-col items-center gap-y-4">
             <MnemonicCard />
             <WalletGenerator setOpenPaymentDialog={setOpenPaymentDialog} />
+            <PaymentsTable />
             <PaymentDialog
               openPaymentDialog={openPaymentDialog}
               setOpenPaymentDialog={setOpenPaymentDialog}

@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect } from "react";
+import React, { forwardRef } from "react";
 import { Card, CardContent, CardTitle, CardFooter } from "../ui/card";
 import { Icon } from "@iconify-icon/react";
 import { calculatePayments, cn, TimestampTemplate } from "@/lib/utils";
@@ -39,10 +39,6 @@ const StyledAddress = ({
 
 const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
   ({ onSelectWallet, selectedWallet, wallets }, ref) => {
-    useEffect(() => {
-      console.log("update");
-    }, [wallets, selectedWallet]);
-
     return (
       <ul ref={ref} className="flex gap-x-4 overflow-auto md:py-8">
         {wallets.map(({ address, payments, created }, index) => {

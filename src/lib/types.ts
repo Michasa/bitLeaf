@@ -1,3 +1,4 @@
+import { DetailLabels } from "./utils";
 
 export interface SessionData {
   mnemonic: string
@@ -18,21 +19,28 @@ export interface UseMnemonic {
   onRevealMasterKey: () => void;
 }
 
-export type SubmittedForm = {
+export interface SubmittedForm {
   recipientAddress: string;
   amount: number;
   label?: string | undefined;
   message?: string | undefined;
 };
 
-export type SavedPayment = SubmittedForm & {
-  created: Date,
-  paid: false,
-  uri: string,
-}
-
 export enum PageType {
   ERROR = "ERROR",
   FORM = "FORM",
   QR_CODE = "QR_CODE",
 }
+
+export interface SavedPayment extends SubmittedForm {
+  created: Date;
+  paid: false;
+  uri: string;
+}
+
+export type QRCodeDialogData = Partial<
+  Record<
+    Extract<(typeof DetailLabels)[keyof typeof DetailLabels], string>,
+    string
+  >
+> | null;

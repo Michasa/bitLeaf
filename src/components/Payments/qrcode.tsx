@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { PageType, SavedPayment } from "@/lib/types";
 import QRCode from "react-qr-code";
 import { PAGES } from ".";
-import { parseInfo } from "@/lib/utils";
+import { formatForDisplay } from "@/lib/utils";
 
 type QRCodeShareProps = {
   createdPayment: SavedPayment | null;
@@ -21,7 +21,7 @@ const QRCodeShare = ({
     return null;
   }
 
-  const displayInfo = parseInfo({ ...createdPayment });
+  const displayInfo = formatForDisplay({ ...createdPayment });
   const { uri, ...otherDetails } = displayInfo;
 
   return (
@@ -46,7 +46,7 @@ const QRCodeShare = ({
               value && (
                 <div key={index} className="flex flex-col">
                   <b>{key}</b>
-                  <span className="truncate rounded-md border border-brand-olive-400 bg-white p-2">
+                  <span className="text-wrap rounded-md border border-brand-olive-400 bg-white p-2">
                     {value}
                   </span>
                 </div>
