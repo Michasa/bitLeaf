@@ -46,7 +46,7 @@ const QRCodeShare = ({
               value && (
                 <div key={index} className="flex flex-col">
                   <b>{key}</b>
-                  <span className="text-wrap rounded-md border border-brand-olive-400 bg-white p-2">
+                  <span className="truncate text-wrap rounded-md border border-brand-olive-400 bg-white p-2">
                     {value}
                   </span>
                 </div>

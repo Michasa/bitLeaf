@@ -7,16 +7,31 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { WalletSelector } from "./WalletSelector";
+import { toast } from "@/hooks/use-toast";
 
 const WalletMobile = ({
   wallets,
   onSelectWallet,
   selectedWallet,
 }: Pick<WalletSelector, "wallets" | "onSelectWallet" | "selectedWallet">) => {
+  const onChooseWallet = (address: string) => {
+    const wallet = wallets.find((_wallet) => _wallet.address === address);
+
+    if (!wallet) {
+      toast({
+        title: `Wallet not found!`,
+      });
+      return;
+    }
+
+    onSelectWallet(wallet);
+  };
   return (
     <Select
       value={selectedWallet?.address ? selectedWallet?.address : undefined}
-      onValueChange={(value) => onSelectWallet(value)}
+      onValueChange={(value) => {
+        onChooseWallet(value);
+      }}
     >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Select a Wallet" />

@@ -20,7 +20,7 @@ const TableContent = ({
           </TableCell>
         ))}
         <TableCell className="text-right font-medium">
-          <Button onClick={() => onShowQR(dialogData)}>See Code</Button>
+          <Button onClick={() => onShowQR(dialogData)}>See QR Code</Button>
         </TableCell>
       </TableRow>
     ))}

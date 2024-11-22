@@ -121,7 +121,7 @@ const PaymentsFlow = ({
   };
 
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden rounded-md border border-slate-500/50 xl:h-fit">
+    <div className="h-full overflow-y-auto overflow-x-hidden rounded-md border border-slate-500/50 p-2 xl:h-fit">
       {renderPage()}
     </div>
   );
