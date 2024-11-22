@@ -14,6 +14,7 @@ import { DetailLabels, formatForDisplay } from "@/lib/utils";
 import { Button } from "../ui/button";
 import QRCodeDialog from "./dialog";
 import { QRCodeDialogData, SavedPayment } from "@/lib/types";
+import useWebSocket from "@/hooks/use-websocket";
 
 const EmptyUI = () => (
   <>
@@ -26,6 +27,7 @@ const EmptyUI = () => (
 );
 
 const PaymentsTable = () => {
+  useWebSocket();
   const { wallets } = useStateContext();
   const [openQRCodeDialog, setOpenQRCodeDialog] = useState(false);
   const [selectedQRCode, setSelectedQRCode] = useState<QRCodeDialogData>(null);
