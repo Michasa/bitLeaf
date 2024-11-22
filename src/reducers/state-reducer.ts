@@ -4,7 +4,7 @@ export enum Actions {
   ADD_WALLET = "ADD_WALLET",
   UPDATE_WALLET = "UPDATE_WALLET",
   DELETE_WALLET = "DELETE_WALLET",
-  SELECTED_WALLET = 'SELECTED_WALLET'
+  SELECTED_WALLET = "SELECTED_WALLET",
 }
 
 export type ReducerState = {
@@ -23,7 +23,10 @@ type Action =
   | { type: Actions.DELETE_WALLET; payload: Wallet }
   | { type: Actions.SELECTED_WALLET; payload: Wallet | null };
 
-export const stateReducer = (state: ReducerState, action: Action): ReducerState => {
+export const stateReducer = (
+  state: ReducerState,
+  action: Action,
+): ReducerState => {
   switch (action.type) {
     case Actions.ADD_WALLET:
       return { ...state, wallets: [...state.wallets, action.payload] };
@@ -32,15 +35,19 @@ export const stateReducer = (state: ReducerState, action: Action): ReducerState 
       if (!action.payload) return state;
       return {
         ...state,
-        wallets: state.wallets.map(wallet =>
-          wallet.address === action.payload.address ? { ...wallet, ...action.payload } : wallet
+        wallets: state.wallets.map((wallet) =>
+          wallet.address === action.payload.address
+            ? { ...wallet, ...action.payload }
+            : wallet,
         ),
       };
 
     case Actions.DELETE_WALLET:
       return {
         ...state,
-        wallets: state.wallets.filter(wallet => wallet.address !== action.payload.address),
+        wallets: state.wallets.filter(
+          (wallet) => wallet.address !== action.payload.address,
+        ),
       };
 
     case Actions.SELECTED_WALLET:

@@ -46,9 +46,7 @@ const useMnemonic = () => {
     }
   };
 
-
-
-  return { revealLoading, mnemonicPhrase, onRevealMasterKey, };
+  return { revealLoading, mnemonicPhrase, onRevealMasterKey };
 };
 
 export default useMnemonic;

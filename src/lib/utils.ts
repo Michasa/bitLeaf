@@ -1,13 +1,17 @@
 import { toast } from "@/hooks/use-toast";
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-import { SavedPayment, SubmittedPaymentForm, Wallet, PaymentTableData } from "./types";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import {
+  SavedPayment,
+  SubmittedPaymentForm,
+  Wallet,
+  PaymentTableData,
+} from "./types";
 import DOMPurify from "isomorphic-dompurify";
 import tinydate from "tinydate";
 
-
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export async function handleCopy(
@@ -23,7 +27,7 @@ export async function handleCopy(
         title: "Could not copy",
       });
   }
-};
+}
 
 export const sanitizeAndEncodeValues = (
   values: SubmittedPaymentForm,
@@ -45,12 +49,12 @@ export const sanitizeAndEncodeValues = (
 };
 
 export const createPaymentURI = (values: SubmittedPaymentForm) => {
-  const main = `bitcoin:${values.address}?amount=${values.amount}`
-  const label = values.label ? `&label=${values.label}` : ''
-  const message = values.message ? `&message=${values.message}` : ''
+  const main = `bitcoin:${values.address}?amount=${values.amount}`;
+  const label = values.label ? `&label=${values.label}` : "";
+  const message = values.message ? `&message=${values.message}` : "";
 
-  return main + label + message
-}
+  return main + label + message;
+};
 
 export const TimestampTemplate = tinydate("{DD}/{MM}/{YY} at {HH}:{mm}:{ss}");
 
@@ -65,7 +69,7 @@ export const DetailLabels: Record<keyof SavedPayment, string> = {
   created: "Created",
   paid: "Payment Received?",
   uri: "uri",
-}
+};
 
 const valueHandlers: Partial<Record<keyof SavedPayment, ValueHandler>> = {
   label: (value) => decodeURIComponent(value as string),
@@ -76,19 +80,26 @@ const valueHandlers: Partial<Record<keyof SavedPayment, ValueHandler>> = {
 
 const defaultHandler: ValueHandler = (value) => String(value);
 
-export const formatForDisplay = (paymentInfo: Partial<SavedPayment>): Record<keyof typeof DetailLabels, string> => {
-  return Object.entries(paymentInfo).reduce<Record<string, string>>((acc, [key, value]) => {
-    const typedKey = key as keyof SavedPayment;
-    const displayLabel = DetailLabels[typedKey];
+export const formatForDisplay = (
+  paymentInfo: Partial<SavedPayment>,
+): Record<keyof typeof DetailLabels, string> => {
+  return Object.entries(paymentInfo).reduce<Record<string, string>>(
+    (acc, [key, value]) => {
+      const typedKey = key as keyof SavedPayment;
+      const displayLabel = DetailLabels[typedKey];
 
-    const handler = valueHandlers[typedKey] || defaultHandler;
+      const handler = valueHandlers[typedKey] || defaultHandler;
 
-    acc[displayLabel] = handler(value);
-    return acc;
-  }, {});
+      acc[displayLabel] = handler(value);
+      return acc;
+    },
+    {},
+  );
 };
 
-export const calculatePayments = (payments: Wallet['payments']): { completed: number; pending: number } => {
+export const calculatePayments = (
+  payments: Wallet["payments"],
+): { completed: number; pending: number } => {
   const completed = payments.filter(({ paid }) => paid).length;
   const pending = payments.length - completed;
 
@@ -123,7 +134,3 @@ export const formatForTable = (wallets: Wallet[]): [] | PaymentTableData => {
     };
   });
 };
-
-
-
-

@@ -1,16 +1,16 @@
 import { DetailLabels } from "./utils";
 
 export interface SessionData {
-  mnemonic: string
+  mnemonic: string;
   seed: string;
-  pathIndex: number
+  pathIndex: number;
 }
 export interface Wallet {
-  created: Date
-  address: string //public address to recieve funds
-  xpriv: "hidden" | string //will be sent hidden unless user requests to see it
-  xprivSealed: string //sealed version of xpriv decrypted on server
-  payments: SavedPayment[] | []
+  created: Date;
+  address: string; //public address to recieve funds
+  xpriv: "hidden" | string; //will be sent hidden unless user requests to see it
+  xprivSealed: string; //sealed version of xpriv decrypted on server
+  payments: SavedPayment[] | [];
 }
 
 export interface UseMnemonic {
@@ -24,7 +24,7 @@ export interface SubmittedPaymentForm {
   amount: number;
   label?: string | undefined;
   message?: string | undefined;
-};
+}
 
 export enum PageType {
   ERROR = "ERROR",
@@ -33,11 +33,10 @@ export enum PageType {
 }
 
 export enum ReducerAction {
-  CREATE = 'CREATE',
-  UPDATE = 'UPDATE',
-  DELETE = 'DELETE'
+  CREATE = "CREATE",
+  UPDATE = "UPDATE",
+  DELETE = "DELETE",
 }
-
 
 export interface SavedPayment extends SubmittedPaymentForm {
   created: Date;
