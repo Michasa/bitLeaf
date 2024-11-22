@@ -6,32 +6,30 @@ import { z } from "zod";
 import { StateHandler } from "../context/StateHandler";
 import FormPage from "./form";
 import QRCodeShare from "./qrcode";
-import { SavedPayment, SubmittedForm } from "@/lib/types";
+import { PageType, SavedPayment, SubmittedForm } from "@/lib/types";
 import { MIN_REQ_AMOUNT } from "@/lib/constants";
-import { useToast } from "@/hooks/use-toast";
 import { createPaymentURI, sanitizeAndEncodeValues } from "@/lib/utils";
+import Error from "./error";
 
 type PaymentsFlow = Pick<StateHandler, "selectedWallet" | "wallets"> & {
   setOpenPaymentDialog: (arg: boolean) => void;
 };
+
+export const PAGES = {
+  0: PageType.ERROR,
+  1: PageType.FORM,
+  2: PageType.QR_CODE,
+} as const;
 
 const PaymentsFlow = ({
   selectedWallet,
   wallets,
   setOpenPaymentDialog,
 }: PaymentsFlow) => {
-  const { toast } = useToast();
-
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<PageType>(PAGES[1]);
   const [createdPayment, setCreatedPayment] = useState<SavedPayment | null>(
     null,
   );
-
-  const onUpdateCurrentPage = (newPage: number) => {
-    if (newPage > 1 && newPage <= 2) {
-      setPage(newPage);
-    }
-  };
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -44,15 +42,16 @@ const PaymentsFlow = ({
   });
 
   const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    //todo if no values crash appp
+    if (!values.recipientAddress || !values.amount) {
+      setPage(PAGES[0]);
+      return;
+    }
+
     const sanitizedValues = sanitizeAndEncodeValues(values);
 
     if (Object.keys(sanitizedValues).length === 0) {
-      toast({
-        title: "Could not process payment request!",
-        description:
-          "Something went wrong when preparing the QR Code, please restart payments again",
-      });
+      setPage(PAGES[0]);
+      return;
     }
 
     const paymentURI = createPaymentURI(sanitizedValues);
@@ -65,12 +64,12 @@ const PaymentsFlow = ({
     } satisfies SavedPayment;
 
     setCreatedPayment(newPayment);
-    onUpdateCurrentPage(2);
+    setPage(PAGES[2]);
   };
 
   const renderPage = () => {
     switch (page) {
-      case 1:
+      case PAGES[1]:
         return (
           <FormPage
             onSubmit={onSubmit}
@@ -79,20 +78,22 @@ const PaymentsFlow = ({
             wallets={wallets}
           />
         );
-      case 2:
+      case PAGES[2]:
         return (
           <QRCodeShare
+            setPage={setPage}
             createdPayment={createdPayment}
             setOpenPaymentDialog={setOpenPaymentDialog}
           />
         );
+      case PAGES[0]:
       default:
-        return <div>Oops, you weren't suppose to see this!!</div>;
+        return <Error />;
     }
   };
 
   return (
-    <div className="h-full overflow-scroll rounded-md border border-slate-500/50 p-4 md:p-8">
+    <div className="h-full overflow-y-auto overflow-x-hidden rounded-md border border-slate-500/50 xl:h-fit">
       {renderPage()}
     </div>
   );

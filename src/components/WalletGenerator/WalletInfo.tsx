@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { Icon } from "@iconify-icon/react";
-import { cn, handleCopy } from "@/lib/utils";
+import { cn, handleCopy, TimestampTemplate } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "../ui/card";
 import SelectedWalletEmpty from "./emptyUI/SelectedWallet";
-import tinydate from "tinydate";
 import { StateHandler } from "../context/StateHandler";
 
 export type WalletInfo = Pick<
@@ -36,7 +35,6 @@ const WalletInfo = ({
     return <SelectedWalletEmpty />;
   }
 
-  const TimestampTemplate = tinydate("{DD}/{MM}/{YY} at {HH}:{mm}:{ss}");
   return (
     <div className="address flex size-full flex-col items-center gap-y-2 rounded-md">
       <Card className="flex size-full flex-col gap-y-2 border-brand-olive-500/50 bg-white p-4">

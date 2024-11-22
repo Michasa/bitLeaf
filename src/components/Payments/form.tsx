@@ -43,7 +43,7 @@ const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
       </FormDescription>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col items-center space-y-8"
+        className="flex flex-col items-center space-y-8 p-4 md:p-8"
       >
         <FormField
           name="recipientAddress"
@@ -51,7 +51,7 @@ const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
             <FormItem className="w-full">
               <div className="flex w-full justify-between">
                 <FormLabel>
-                  Recieving Address{" "}
+                  Recieving Wallet Address{" "}
                   <span className="text-lg text-red-500">*</span>
                 </FormLabel>
                 <FormMessage />

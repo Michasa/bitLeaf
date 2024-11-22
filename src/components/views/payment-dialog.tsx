@@ -23,7 +23,7 @@ const PaymentDialog = ({
   return (
     <Dialog open={openPaymentDialog} onOpenChange={setOpenPaymentDialog}>
       <DialogContent
-        className="flex h-full max-h-[80%] w-11/12 flex-col overflow-hidden rounded-md lg:w-8/12"
+        className="flex h-full max-h-[80%] w-11/12 flex-col overflow-hidden rounded-md lg:w-8/12 xl:h-fit"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>

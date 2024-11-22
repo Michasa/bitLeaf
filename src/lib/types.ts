@@ -38,3 +38,10 @@ export type SavedPayment = SubmittedForm & {
   paid: false,
   uri: string,
 }
+
+
+export enum PageType {
+  ERROR = "ERROR",
+  FORM = "FORM",
+  QR_CODE = "QR_CODE",
+}

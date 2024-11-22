@@ -1,9 +1,8 @@
 import React, { forwardRef } from "react";
 import { Card, CardContent, CardTitle, CardFooter } from "../ui/card";
 import { Icon } from "@iconify-icon/react";
-import { cn } from "@/lib/utils";
+import { cn, TimestampTemplate } from "@/lib/utils";
 import { StateHandler } from "../context/StateHandler";
-import tinydate from "tinydate";
 import { Button } from "../ui/button";
 
 const ADDRESS_PREFIX = "tb1q";
@@ -61,8 +60,6 @@ const PaymentFigures = ({
 
 const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
   ({ onSelectWallet, selectedWallet, wallets }, ref) => {
-    const TimestampTemplate = tinydate("{DD}/{MM}/{YY} @ {HH}:{mm}:{ss}");
-
     return (
       <ul ref={ref} className="flex gap-x-4 overflow-auto md:py-8">
         {wallets.map(({ address, created }, index) => {
