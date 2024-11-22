@@ -18,7 +18,7 @@ const PaymentDialog = ({
   openPaymentDialog,
   setOpenPaymentDialog,
 }: PaymentDialog) => {
-  const { selectedWallet, wallets, onAddPayment } = useStateContext();
+  const { selectedWallet, wallets, onUpdateWallet } = useStateContext();
 
   return (
     <Dialog open={openPaymentDialog} onOpenChange={setOpenPaymentDialog}>
@@ -34,7 +34,7 @@ const PaymentDialog = ({
           </DialogDescription>
         </DialogHeader>{" "}
         <PaymentsFlow
-          onAddPayment={onAddPayment}
+          onUpdateWallet={onUpdateWallet}
           setOpenPaymentDialog={setOpenPaymentDialog}
           selectedWallet={selectedWallet}
           wallets={wallets}

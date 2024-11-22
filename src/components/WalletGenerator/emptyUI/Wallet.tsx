@@ -7,10 +7,10 @@ import { StateHandler } from "@/components/context/StateHandler";
 
 export type WalletEmpty = Pick<
   StateHandler,
-  "onCreateNewWallet" | "loadingNewWallet"
+  "onCreateWallet" | "loadingNewWallet"
 >;
 
-const WalletEmpty = ({ onCreateNewWallet, loadingNewWallet }: WalletEmpty) => {
+const WalletEmpty = ({ onCreateWallet, loadingNewWallet }: WalletEmpty) => {
   return (
     <div className="flex w-fit flex-col place-items-center rounded-lg p-4">
       <Icon
@@ -21,7 +21,7 @@ const WalletEmpty = ({ onCreateNewWallet, loadingNewWallet }: WalletEmpty) => {
         You don't have any wallets yet.
         <br /> Create your first one!
       </p>
-      <Button className="mt-8" onClick={async () => onCreateNewWallet()}>
+      <Button className="mt-8" onClick={async () => onCreateWallet()}>
         {loadingNewWallet ? (
           <>
             <Icon className="animate-spin" icon="ri:loader-fill" />

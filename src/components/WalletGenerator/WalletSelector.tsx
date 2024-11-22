@@ -11,7 +11,7 @@ export type WalletSelector = Pick<
   StateHandler,
   | "wallets"
   | "selectedWallet"
-  | "onCreateNewWallet"
+  | "onCreateWallet"
   | "onSelectWallet"
   | "loadingNewWallet"
 >;
@@ -20,7 +20,7 @@ const WalletSelector = ({
   wallets,
   selectedWallet,
   onSelectWallet,
-  onCreateNewWallet,
+  onCreateWallet,
   loadingNewWallet,
 }: WalletSelector) => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
@@ -49,7 +49,7 @@ const WalletSelector = ({
         className="my-4 self-center justify-self-center disabled:bg-gray-100 disabled:text-black"
         disabled={TOO_MANY_WALLETS || loadingNewWallet}
         onClick={async () => {
-          const wallet = await onCreateNewWallet();
+          const wallet = await onCreateWallet();
           if (wallet && ref.current !== null) {
             setTimeout(() => {
               (ref.current as HTMLElement).scrollLeft = ref.current

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Icon } from "@iconify-icon/react";
 import useMnemonic from "@/hooks/use-mnemonic";
-import { handleCopy } from "@/lib/utils";
+import { cn, handleCopy } from "@/lib/utils";
 
 const Mnemonic = ({
   mnemonicPhrase,
@@ -20,19 +20,15 @@ const Mnemonic = ({
 }) => {
   if (revealLoading) {
     return (
-      <div className="flex w-full items-center text-lg">
+      <div className="flex items-center justify-center text-lg">
         <Icon className="animate-spin" icon="ri:loader-fill" />
         Loading
       </div>
     );
   }
-  let wordArray: string[];
-
-  if (mnemonicPhrase) {
-    wordArray = mnemonicPhrase.split(" ");
-  } else {
-    wordArray = new Array(12).fill("xxxxx");
-  }
+  const wordArray = mnemonicPhrase
+    ? mnemonicPhrase.split(" ")
+    : new Array(12).fill("xxxxx");
 
   return wordArray.map((word, index) => (
     <div className="flex flex-col justify-center" key={index}>
@@ -75,7 +71,12 @@ const MnemonicCard = () => {
             </CollapsibleTrigger>
             <CollapsibleContent className="flex w-full justify-center">
               <CardContent className="mb-4 mt-8 flex flex-col items-center gap-y-4 lg:w-5/6">
-                <div className="flex w-full flex-wrap justify-center gap-2 rounded-md border border-amber-300 bg-white/50 p-4">
+                <div
+                  className={cn(
+                    "flex w-full flex-wrap justify-center gap-2 rounded-md p-4",
+                    !revealLoading && "border border-amber-300 bg-white/50",
+                  )}
+                >
                   <Mnemonic
                     mnemonicPhrase={mnemonicPhrase}
                     revealLoading={revealLoading}

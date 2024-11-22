@@ -1,12 +1,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { Icon } from "@iconify-icon/react";
-import {
-  calculatePayments,
-  cn,
-  handleCopy,
-  TimestampTemplate,
-} from "@/lib/utils";
+import { cn, handleCopy, TimestampTemplate } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -16,7 +11,6 @@ import {
 } from "../ui/card";
 import SelectedWalletEmpty from "./emptyUI/SelectedWallet";
 import { StateHandler } from "../context/StateHandler";
-import PaymentsDisplay from "../paymentsDisplay";
 
 export type WalletInfo = Pick<
   StateHandler,
@@ -40,8 +34,6 @@ const WalletInfo = ({
   if (selectedWallet === null) {
     return <SelectedWalletEmpty />;
   }
-
-  const { completed, pending } = calculatePayments(selectedWallet.payments);
 
   return (
     <div className="address flex size-full flex-col items-center gap-y-2 rounded-md">
@@ -87,7 +79,7 @@ const WalletInfo = ({
                   <Button
                     variant="outline"
                     onClick={() =>
-                      handleCopy(selectedWallet!.address, {
+                      handleCopy(selectedWallet!.xpriv, {
                         title: "XPriv Key Copied!",
                         description: "Keep this somewhere safe!",
                       })
@@ -101,7 +93,7 @@ const WalletInfo = ({
                 )}
                 <Button
                   variant="outline"
-                  onClick={() => onRevealXPriv(selectedWallet.xprivSealed)}
+                  onClick={() => onRevealXPriv(selectedWallet)}
                 >
                   {loadingRevealXPriv ? (
                     <Icon className="animate-spin" icon="ri:loader-fill" />
@@ -129,7 +121,6 @@ const WalletInfo = ({
               {XPRIV_HIDDEN ? "xxxxxxxxxxxxxx" : selectedWallet.xpriv}
             </span>
           </div>
-          <PaymentsDisplay pending={pending} completed={completed} />
         </CardContent>
         <CardFooter className="mt-8 flex w-full flex-col justify-center gap-y-2 p-0 *:w-full *:md:w-4/6 *:lg:w-5/6">
           <Button
@@ -142,18 +133,18 @@ const WalletInfo = ({
             />{" "}
             Create Payment Request
           </Button>
-
-          <Button className="group text-center">
+          {/* //TODO connect selection to filtering of the table */}
+          <Button disabled className="group text-center">
             <Icon
               icon="hugeicons:bitcoin-receive"
               className="text-2xl text-white hover:scale-125"
             />
-            See Payment Requests
+            See Payment Requests (coming soon)
           </Button>
           <Button
             variant="destructive"
             className="group text-center"
-            onClick={() => onDeleteWallet(selectedWallet.address)}
+            onClick={() => onDeleteWallet(selectedWallet)}
           >
             <Icon
               icon="mingcute:delete-2-fill"

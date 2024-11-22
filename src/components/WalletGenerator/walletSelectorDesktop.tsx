@@ -41,7 +41,8 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
   ({ onSelectWallet, selectedWallet, wallets }, ref) => {
     return (
       <ul ref={ref} className="flex gap-x-4 overflow-auto md:py-8">
-        {wallets.map(({ address, payments, created }, index) => {
+        {wallets.map((wallet, index) => {
+          const { address, payments, created } = wallet;
           const isSelected = selectedWallet?.address === address;
 
           const { completed, pending } = calculatePayments(payments);
@@ -55,7 +56,7 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
                     ? "border-amber-300 bg-amber-100 hover:shadow-amber-600/50"
                     : "border border-brand-olive-100/50 bg-brand-olive-100/80 hover:shadow-brand-olive-500",
                 )}
-                onClick={() => onSelectWallet(address)}
+                onClick={() => onSelectWallet(wallet)}
               >
                 <CardTitle className="flex min-h-9 w-full items-center justify-between self-end">
                   <Icon
@@ -87,9 +88,8 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
                     </span>{" "}
                   </div>
                   <Button
-                    onClick={() => {
-                      onSelectWallet(address);
-                    }}
+                    disabled={isSelected}
+                    onClick={() => onSelectWallet(wallet)}
                   >
                     <Icon
                       icon="material-symbols:check-box"
@@ -98,7 +98,7 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
                         isSelected ? "" : "hidden scale-110 group-hover:block",
                       )}
                     />
-                    Select Wallet
+                    {isSelected ? " Selected Wallet" : "Select Wallet"}
                   </Button>
                 </CardFooter>
               </Card>

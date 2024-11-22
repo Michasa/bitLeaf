@@ -14,7 +14,7 @@ import { toast } from "@/hooks/use-toast";
 
 type PaymentsFlow = Pick<
   StateHandler,
-  "selectedWallet" | "wallets" | "onAddPayment"
+  "selectedWallet" | "wallets" | "onUpdateWallet"
 > & {
   setOpenPaymentDialog: (arg: boolean) => void;
 };
@@ -29,7 +29,7 @@ const PaymentsFlow = ({
   selectedWallet,
   wallets,
   setOpenPaymentDialog,
-  onAddPayment,
+  onUpdateWallet,
 }: PaymentsFlow) => {
   const [page, setPage] = useState<PageType>(PAGES[1]);
   const [createdPayment, setCreatedPayment] = useState<SavedPayment | null>(
@@ -66,8 +66,28 @@ const PaymentsFlow = ({
       uri: createPaymentURI(sanitizedValues),
     } satisfies SavedPayment;
 
+    const index = wallets.findIndex(
+      (wallet) => wallet.address === newPayment.recipientAddress,
+    );
+
+    if (index === -1) {
+      toast({
+        title: "Payment Error",
+        description: "Could not find the recipient wallet",
+      });
+      setPage(PAGES[0]);
+      return;
+    }
+
+    let updatingWallet = { ...wallets[index] };
+
+    updatingWallet = {
+      ...updatingWallet,
+      payments: [...updatingWallet.payments, newPayment],
+    };
+
     setCreatedPayment(newPayment);
-    onAddPayment(newPayment);
+    onUpdateWallet(updatingWallet);
     toast({
       title: "Payment request created!",
       description: `For ${newPayment.amount} BTC to ${newPayment.recipientAddress}`,

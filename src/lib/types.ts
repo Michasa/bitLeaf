@@ -32,6 +32,12 @@ export enum PageType {
   QR_CODE = "QR_CODE",
 }
 
+export enum ReducerAction {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE'
+}
+
 export interface SavedPayment extends SubmittedForm {
   created: Date;
   paid: false;

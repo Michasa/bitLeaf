@@ -30,25 +30,31 @@ const PaymentsTable = () => {
   const [openQRCodeDialog, setOpenQRCodeDialog] = useState(false);
   const [selectedQRCode, setSelectedQRCode] = useState<QRCodeDialogData>(null);
 
-  const totalPayments = wallets.map((wallet) =>
-    wallet.payments.map((payment) => {
-      const { label, message, uri, recipientAddress, amount, ...rest } =
-        payment;
-      const dialogInfo = formatForDisplay({
-        recipientAddress,
-        amount,
-        label,
-        message,
-        uri,
-      });
-      const tableInfo = formatForDisplay({ recipientAddress, amount, ...rest });
+  const totalPayments = wallets.length
+    ? wallets.map((wallet) =>
+        wallet.payments.map((payment) => {
+          const { label, message, uri, recipientAddress, amount, ...rest } =
+            payment;
+          const dialogInfo = formatForDisplay({
+            recipientAddress,
+            amount,
+            label,
+            message,
+            uri,
+          });
+          const tableInfo = formatForDisplay({
+            recipientAddress,
+            amount,
+            ...rest,
+          });
 
-      return {
-        tableInfo,
-        dialogInfo,
-      };
-    }),
-  );
+          return {
+            tableInfo,
+            dialogInfo,
+          };
+        }),
+      )
+    : 0;
 
   const onShowQR = (
     dialogInfo: Pick<SavedPayment, "uri" | "label" | "message">,
@@ -64,7 +70,7 @@ const PaymentsTable = () => {
     <>
       <div className="w-full 2xl:w-9/12">
         <h2 className="font-bold">Your Payment Requests</h2>
-        <Table className="debug w-full border-separate border-spacing-x-1 bg-brand-olive-100/30">
+        <Table className="w-full border-separate border-spacing-x-1 bg-brand-olive-100/30">
           <TableHeader>
             <TableRow className="*:bg-brand-olive-400 *:text-white">
               {Object.values(TableHeaders).map((header) => (
@@ -73,12 +79,9 @@ const PaymentsTable = () => {
               <TableHead className="bg-brand-olive-600 text-center text-white">
                 Request QRCode
               </TableHead>
-              <TableHead className="bg-brand-olive-600 text-center text-white">
-                Check Payment Status
-              </TableHead>
             </TableRow>
           </TableHeader>
-          {totalPayments.length === 0 ? (
+          {totalPayments === 0 ? (
             <TableCaption className="my-8 w-full grayscale">
               <EmptyUI />
             </TableCaption>
@@ -99,18 +102,6 @@ const PaymentsTable = () => {
                       <TableCell className="font-medium">
                         <Button onClick={() => onShowQR(dialogInfo)}>
                           See Code
-                        </Button>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        <Button
-                          onClick={() =>
-                            console.log(
-                              tableInfo.amount,
-                              tableInfo.recipientAddress,
-                            )
-                          }
-                        >
-                          Check For Payment
                         </Button>
                       </TableCell>
                     </TableRow>

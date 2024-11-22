@@ -16,7 +16,7 @@ const WalletGenerator = ({
     selectedWallet,
     loadingNewWallet,
     loadingRevealXPriv,
-    onCreateNewWallet,
+    onCreateWallet,
     onSelectWallet,
     onDeleteWallet,
     onRevealXPriv,
@@ -30,7 +30,7 @@ const WalletGenerator = ({
         </h2>{" "}
         <Card className="flex size-full h-fit flex-col items-center justify-center border-0 bg-brand-olive-200/20 p-4">
           <WalletEmpty
-            onCreateNewWallet={onCreateNewWallet}
+            onCreateWallet={onCreateWallet}
             loadingNewWallet={loadingNewWallet}
           />
         </Card>
@@ -50,7 +50,7 @@ const WalletGenerator = ({
               wallets={wallets}
               selectedWallet={selectedWallet}
               onSelectWallet={onSelectWallet}
-              onCreateNewWallet={onCreateNewWallet}
+              onCreateWallet={onCreateWallet}
               loadingNewWallet={loadingNewWallet}
             />
           </div>
