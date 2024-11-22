@@ -1,6 +1,6 @@
 'use server'
 import { SessionOptions } from "@/lib/session"
-import { SessionData, NewWallet } from "@/lib/types"
+import { SessionData, Wallet } from "@/lib/types"
 import { generateMnemonic, mnemonicToSeedSync } from "bip39"
 import HDKey from 'hdkey'
 import { getIronSession, IronSession, sealData, unsealData } from "iron-session"
@@ -53,7 +53,7 @@ export async function revealMnemonic(): Promise<SessionData['mnemonic']> {
   return session.mnemonic
 }
 
-export async function createXWallet(): Promise<NewWallet | void> {
+export async function createXWallet(): Promise<Wallet | void> {
   const session = await getSession()
   if (!session.seed) {
     throw new Error(NO_SEED_FOUND)
@@ -93,7 +93,7 @@ export async function createXWallet(): Promise<NewWallet | void> {
   }
 }
 
-export async function revealXPriv(xprivSealed: string): Promise<NewWallet['xpriv'] | void> {
+export async function revealXPriv(xprivSealed: string): Promise<Wallet['xpriv'] | void> {
   const answer = await unsealData<string>(xprivSealed, { password: process.env.SECRET_XPRIV_PASSWORD as string })
 
   if (!answer) {

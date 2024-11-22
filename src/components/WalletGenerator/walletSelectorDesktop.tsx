@@ -1,9 +1,10 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect } from "react";
 import { Card, CardContent, CardTitle, CardFooter } from "../ui/card";
 import { Icon } from "@iconify-icon/react";
-import { cn, TimestampTemplate } from "@/lib/utils";
+import { calculatePayments, cn, TimestampTemplate } from "@/lib/utils";
 import { StateHandler } from "../context/StateHandler";
 import { Button } from "../ui/button";
+import PaymentsDisplay from "../paymentsDisplay";
 
 const ADDRESS_PREFIX = "tb1q";
 
@@ -36,34 +37,18 @@ const StyledAddress = ({
   );
 };
 
-const PaymentFigures = ({
-  number,
-  label,
-  isSelected,
-}: {
-  number: number;
-  label: string;
-  isSelected: boolean;
-}) => (
-  <div
-    className={cn(
-      "flex flex-col items-center justify-center rounded-md border-2 p-2 font-orbitron text-white",
-      isSelected
-        ? "border-amber-700 bg-amber-600/70"
-        : "border-brand-dark bg-brand-dark/70",
-    )}
-  >
-    <span className="block text-lg">{number} </span>
-    <span className="block text-xs">{label}</span>
-  </div>
-);
-
 const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
   ({ onSelectWallet, selectedWallet, wallets }, ref) => {
+    useEffect(() => {
+      console.log("update");
+    }, [wallets, selectedWallet]);
+
     return (
       <ul ref={ref} className="flex gap-x-4 overflow-auto md:py-8">
-        {wallets.map(({ address, created }, index) => {
+        {wallets.map(({ address, payments, created }, index) => {
           const isSelected = selectedWallet?.address === address;
+
+          const { completed, pending } = calculatePayments(payments);
 
           return (
             <li key={index} className="h-full w-96 shrink-0">
@@ -94,18 +79,7 @@ const WalletDesktop = forwardRef<HTMLUListElement, WalletDesktop>(
                   </div>
                   <div className="mb-0 mt-4 flex w-full flex-col space-y-2 font-orbitron text-lg font-bold">
                     <p>Payments</p>
-                    <div className="grid auto-cols-fr grid-flow-col justify-evenly gap-x-2 font-semibold">
-                      <PaymentFigures
-                        number={0}
-                        label="Pending"
-                        isSelected={isSelected}
-                      />
-                      <PaymentFigures
-                        number={0}
-                        label="Completed"
-                        isSelected={isSelected}
-                      />
-                    </div>
+                    <PaymentsDisplay pending={pending} completed={completed} />
                   </div>
                 </CardContent>
                 <CardFooter className="group flex w-full justify-between gap-x-2 p-0">

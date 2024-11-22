@@ -1,7 +1,12 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { Icon } from "@iconify-icon/react";
-import { cn, handleCopy, TimestampTemplate } from "@/lib/utils";
+import {
+  calculatePayments,
+  cn,
+  handleCopy,
+  TimestampTemplate,
+} from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -11,6 +16,7 @@ import {
 } from "../ui/card";
 import SelectedWalletEmpty from "./emptyUI/SelectedWallet";
 import { StateHandler } from "../context/StateHandler";
+import PaymentsDisplay from "../paymentsDisplay";
 
 export type WalletInfo = Pick<
   StateHandler,
@@ -34,6 +40,8 @@ const WalletInfo = ({
   if (selectedWallet === null) {
     return <SelectedWalletEmpty />;
   }
+
+  const { completed, pending } = calculatePayments(selectedWallet.payments);
 
   return (
     <div className="address flex size-full flex-col items-center gap-y-2 rounded-md">
@@ -121,6 +129,7 @@ const WalletInfo = ({
               {XPRIV_HIDDEN ? "xxxxxxxxxxxxxx" : selectedWallet.xpriv}
             </span>
           </div>
+          <PaymentsDisplay pending={pending} completed={completed} />
         </CardContent>
         <CardFooter className="mt-8 flex w-full flex-col justify-center gap-y-2 p-0 *:w-full *:md:w-4/6 *:lg:w-5/6">
           <Button

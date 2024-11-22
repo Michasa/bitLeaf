@@ -1,17 +1,18 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { NewWallet } from "@/lib/types";
+import { SavedPayment, Wallet } from "@/lib/types";
 import { createXWallet, revealXPriv } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 
 export interface StateHandler {
-  wallets: NewWallet[];
-  selectedWallet: NewWallet | null;
+  wallets: Wallet[];
+  selectedWallet: Wallet | null;
   loadingNewWallet: boolean;
   loadingRevealXPriv: boolean;
-  onSelectWallet: (arg: NewWallet["address"] | null) => void;
-  onCreateNewWallet: () => Promise<NewWallet | undefined>;
-  onDeleteWallet: (arg: NewWallet["address"]) => void;
-  onRevealXPriv: (arg: NewWallet["xprivSealed"]) => void;
+  onSelectWallet: (arg: Wallet["address"] | null) => void;
+  onCreateNewWallet: () => Promise<Wallet | undefined>;
+  onDeleteWallet: (arg: Wallet["address"]) => void;
+  onRevealXPriv: (arg: Wallet["xprivSealed"]) => void;
+  onAddPayment: (arg: SavedPayment) => void;
 }
 
 const StateHandler = createContext<StateHandler | undefined>(undefined);
@@ -23,8 +24,8 @@ export const StateHandlerProvider = ({
 }): JSX.Element => {
   const { toast } = useToast();
 
-  const [wallets, setWallets] = useState<[] | NewWallet[]>([]);
-  const [selectedWallet, setSelectedWallet] = useState<NewWallet | null>(null);
+  const [wallets, setWallets] = useState<[] | Wallet[]>([]);
+  const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
   const [loadingNewWallet, setLoadingNewWallet] = useState<boolean>(false);
   const [loadingRevealXPriv, setLoadingRevealXPriv] = useState<boolean>(false);
 
@@ -56,7 +57,7 @@ export const StateHandlerProvider = ({
     }
   };
 
-  const onSelectWallet = (choice: NewWallet["address"] | null) => {
+  const onSelectWallet = (choice: Wallet["address"] | null) => {
     if (choice === null) {
       setSelectedWallet(null);
       return;
@@ -73,7 +74,7 @@ export const StateHandlerProvider = ({
     setSelectedWallet(selectedWallet);
   };
 
-  const onDeleteWallet = (address: NewWallet["address"]) => {
+  const onDeleteWallet = (address: Wallet["address"]) => {
     //TODO add warning diaglog
     if (address === selectedWallet?.address) {
       setSelectedWallet(null);
@@ -96,7 +97,7 @@ export const StateHandlerProvider = ({
     }
   };
 
-  const onRevealXPriv = async (hiddenXPriv: NewWallet["xprivSealed"]) => {
+  const onRevealXPriv = async (hiddenXPriv: Wallet["xprivSealed"]) => {
     if (selectedWallet?.xpriv === "hidden") {
       try {
         setLoadingRevealXPriv(true);
@@ -122,7 +123,32 @@ export const StateHandlerProvider = ({
     }
   };
 
-  // const onUpdateWallet = () => {};
+  const onAddPayment = (newPayment: SavedPayment) => {
+    const walletCopy: Wallet[] = [...wallets];
+
+    const index = walletCopy.findIndex(
+      (wallet) => wallet.address === newPayment.recipientAddress,
+    );
+
+    if (index === -1) {
+      toast({
+        title: "Payment Error",
+        description: "Could not find the recipient wallet",
+      });
+      return;
+    }
+
+    walletCopy[index] = {
+      ...walletCopy[index],
+      payments: [...walletCopy[index].payments, newPayment],
+    };
+
+    setWallets(walletCopy);
+
+    if (selectedWallet?.address === newPayment.recipientAddress) {
+      setSelectedWallet(walletCopy[index]);
+    }
+  };
 
   return (
     <StateHandler.Provider
@@ -135,6 +161,7 @@ export const StateHandlerProvider = ({
         onSelectWallet,
         onDeleteWallet,
         onRevealXPriv,
+        onAddPayment,
       }}
     >
       {children}

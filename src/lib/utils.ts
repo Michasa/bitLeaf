@@ -1,7 +1,7 @@
 import { toast } from "@/hooks/use-toast";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { SavedPayment, SubmittedForm } from "./types";
+import { SavedPayment, SubmittedForm, Wallet } from "./types";
 import DOMPurify from "isomorphic-dompurify";
 import tinydate from "tinydate";
 
@@ -88,4 +88,17 @@ export const parseInfo = (paymentInfo: SavedPayment): Record<string, string> => 
     return acc;
   }, {});
 };
+
+export const calculatePayments = (payments: Wallet['payments']) => {
+  const completed = payments.filter(({ paid }) => paid).length;
+  const pending = payments.length - completed;
+
+  return {
+    completed: Number(completed),
+    pending: Number(pending),
+  };
+};
+
+
+
 

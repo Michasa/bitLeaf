@@ -24,9 +24,6 @@ const QRCodeShare = ({
   const displayInfo = parseInfo({ ...createdPayment });
   const { uri, ...otherDetails } = displayInfo;
 
-  console.log(uri);
-  console.log(otherDetails);
-
   return (
     <div className="flex size-full flex-col gap-y-2 p-2">
       <div className="flex flex-col *:flex-1 lg:flex-row">

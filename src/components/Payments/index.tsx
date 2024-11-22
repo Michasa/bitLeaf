@@ -10,8 +10,12 @@ import { PageType, SavedPayment, SubmittedForm } from "@/lib/types";
 import { MIN_REQ_AMOUNT } from "@/lib/constants";
 import { createPaymentURI, sanitizeAndEncodeValues } from "@/lib/utils";
 import Error from "./error";
+import { toast } from "@/hooks/use-toast";
 
-type PaymentsFlow = Pick<StateHandler, "selectedWallet" | "wallets"> & {
+type PaymentsFlow = Pick<
+  StateHandler,
+  "selectedWallet" | "wallets" | "onAddPayment"
+> & {
   setOpenPaymentDialog: (arg: boolean) => void;
 };
 
@@ -25,6 +29,7 @@ const PaymentsFlow = ({
   selectedWallet,
   wallets,
   setOpenPaymentDialog,
+  onAddPayment,
 }: PaymentsFlow) => {
   const [page, setPage] = useState<PageType>(PAGES[1]);
   const [createdPayment, setCreatedPayment] = useState<SavedPayment | null>(
@@ -54,16 +59,19 @@ const PaymentsFlow = ({
       return;
     }
 
-    const paymentURI = createPaymentURI(sanitizedValues);
-
     const newPayment = {
       ...(sanitizedValues as SubmittedForm),
       created: new Date(),
       paid: false,
-      uri: paymentURI,
+      uri: createPaymentURI(sanitizedValues),
     } satisfies SavedPayment;
 
     setCreatedPayment(newPayment);
+    onAddPayment(newPayment);
+    toast({
+      title: "Payment request created!",
+      description: `For ${newPayment.amount} BTC to ${newPayment.recipientAddress}`,
+    });
     setPage(PAGES[2]);
   };
 

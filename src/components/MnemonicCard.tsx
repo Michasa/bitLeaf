@@ -20,7 +20,7 @@ const Mnemonic = ({
 }) => {
   if (revealLoading) {
     return (
-      <div className="flex items-center text-lg">
+      <div className="flex w-full items-center text-lg">
         <Icon className="animate-spin" icon="ri:loader-fill" />
         Loading
       </div>
@@ -75,7 +75,7 @@ const MnemonicCard = () => {
             </CollapsibleTrigger>
             <CollapsibleContent className="flex w-full justify-center">
               <CardContent className="mb-4 mt-8 flex flex-col items-center gap-y-4 lg:w-5/6">
-                <div className="flex flex-wrap justify-center gap-2 rounded-md border border-amber-300 bg-white/50 p-4">
+                <div className="flex w-full flex-wrap justify-center gap-2 rounded-md border border-amber-300 bg-white/50 p-4">
                   <Mnemonic
                     mnemonicPhrase={mnemonicPhrase}
                     revealLoading={revealLoading}

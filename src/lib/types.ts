@@ -4,20 +4,12 @@ export interface SessionData {
   seed: string;
   pathIndex: number
 }
-export interface NewWallet {
+export interface Wallet {
   created: Date
   address: string //public address to recieve funds
   xpriv: "hidden" | string //will be sent hidden unless user requests to see it
   xprivSealed: string //sealed version of xpriv decrypted on server
-  payments: Payment[] | []
-}
-
-export interface Payment {
-  recipientAddress: string
-  amount: number
-  label: string
-  date: Date
-  isPaid: boolean
+  payments: SavedPayment[] | []
 }
 
 export interface UseMnemonic {
@@ -38,7 +30,6 @@ export type SavedPayment = SubmittedForm & {
   paid: false,
   uri: string,
 }
-
 
 export enum PageType {
   ERROR = "ERROR",

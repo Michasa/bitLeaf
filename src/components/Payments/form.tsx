@@ -117,7 +117,7 @@ const FormPage = ({ form, selectedWallet, wallets, onSubmit }: FormPage) => {
           name="label"
           render={({ field }) => {
             const label = watch("label");
-            const wordCount = label ? label.length : 0; // Changed from null to 0
+            const wordCount = label ? label.length : 0;
 
             return (
               <FormItem className="w-full">
