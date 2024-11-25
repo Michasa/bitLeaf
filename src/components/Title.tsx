@@ -8,7 +8,7 @@ const Title = () => {
       <Image
         src={logo}
         alt=""
-        className="pointer-events-none absolute left-[15%] size-24 rotate-[-10] animate-bounce object-contain object-left animate-duration-500 animate-once max-xs:hidden md:-left-4 md:top-0 md:size-32 lg:-left-8 lg:-top-3 lg:size-40"
+        className="pointer-events-none absolute left-[6%] size-24 rotate-[-10] animate-bounce object-contain object-left animate-duration-500 animate-once max-xs:hidden md:-left-4 md:top-0 md:size-32 lg:-left-8 lg:-top-3 lg:size-40"
       />
       <h1 className="mb-12 font-bold text-transparent max-xs:text-yellow-400">
         b

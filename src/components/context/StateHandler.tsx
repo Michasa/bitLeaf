@@ -46,7 +46,6 @@ export const StateHandlerProvider = ({
       const newWallet = await createXWallet();
 
       if (newWallet) {
-        // setWallets([...wallets, newWallet]);
         dispatch({ type: Actions.ADD_WALLET, payload: newWallet });
 
         toast({
@@ -81,10 +80,10 @@ export const StateHandlerProvider = ({
     );
 
     if (toDeleteWallet) {
-      //TODO add warning diaglog about deleting wallet
       dispatch({ type: Actions.DELETE_WALLET, payload: wallet });
       toast({
         title: `Wallet ${wallet.address.slice(0, 15)}... deleted!`,
+        variant: "destructive",
       });
     } else {
       toast({

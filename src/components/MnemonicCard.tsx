@@ -11,21 +11,7 @@ import { Icon } from "@iconify-icon/react";
 import useMnemonic from "@/hooks/use-mnemonic";
 import { cn, handleCopy } from "@/lib/utils";
 
-const Mnemonic = ({
-  mnemonicPhrase,
-  revealLoading,
-}: {
-  mnemonicPhrase: null | string;
-  revealLoading: boolean;
-}) => {
-  if (revealLoading) {
-    return (
-      <span className="flex size-fit items-center justify-center gap-x-2 text-lg">
-        <Icon className="animate-spin" icon="ri:loader-fill" />
-        Loading
-      </span>
-    );
-  }
+const Mnemonic = ({ mnemonicPhrase }: { mnemonicPhrase: null | string }) => {
   const wordArray = mnemonicPhrase
     ? mnemonicPhrase.split(" ")
     : new Array(12).fill("xxxxx");
@@ -73,14 +59,17 @@ const MnemonicCard = () => {
               <CardContent className="mb-4 mt-8 flex flex-col items-center gap-y-4 lg:w-5/6">
                 <div
                   className={cn(
-                    "flex w-full flex-wrap justify-center gap-2 rounded-md",
-                    !revealLoading && "border border-amber-300 bg-white/50 p-4",
+                    "flex w-full flex-wrap justify-center gap-2 rounded-md border border-amber-300 bg-white/50 p-4",
                   )}
                 >
-                  <Mnemonic
-                    mnemonicPhrase={mnemonicPhrase}
-                    revealLoading={revealLoading}
-                  />
+                  {revealLoading ? (
+                    <span className="flex h-40 w-full items-center justify-center gap-x-2 text-lg">
+                      <Icon className="animate-spin" icon="ri:loader-fill" />
+                      Loading
+                    </span>
+                  ) : (
+                    <Mnemonic mnemonicPhrase={mnemonicPhrase} />
+                  )}
                 </div>
                 <div className="flex gap-x-4">
                   {" "}
